@@ -1,0 +1,1978 @@
+openapi: 3.1.0
+info:
+  title: Credify API
+  version: 1.1.0
+  description: >
+    Documentação da API Credify. Autentique-se com ClientID e ClientSecret para
+    obter o token JWT (válido 24h) e utilize nas demais requisições.
+  contact:
+    name: Credify
+    url: https://credify.com.br
+
+servers:
+  - url: https://api.credify.com.br
+    description: Produção
+
+security:
+  - BearerAuth: []
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+
+    RespostaVeiculoTotal:
+      type: object
+      properties:
+        CONSULTA:
+          type: object
+          properties:
+            CODIGORESPOSTA: { type: string }
+            DATAHORA: { type: string }
+            LOGON: { type: string }
+            IDCONSULTA: { type: string }
+        RESPOSTA:
+          type: object
+          properties:
+            CODIGO:
+              type: array
+              items: { type: string }
+            INDICIOSINISTROVEICULAR:
+              $ref: '#/components/schemas/IndiciSinistro'
+            RECALL:
+              $ref: '#/components/schemas/DescricaoSimples'
+            HISTORICOROUBOFURTO:
+              $ref: '#/components/schemas/DescricaoSimples'
+            LEILAOCONJUGADO:
+              $ref: '#/components/schemas/DescricaoSimples'
+            HISTORICOPROPRIETARIO:
+              $ref: '#/components/schemas/HistoricoProprietario'
+            VEICULARBNACIONAL:
+              $ref: '#/components/schemas/VeicularBNacional'
+            PRECIFICADORFIPE:
+              $ref: '#/components/schemas/PrecificadorFipe'
+            VEICULOSBDRP:
+              $ref: '#/components/schemas/VeiculosBDRP'
+            DADOS:
+              $ref: '#/components/schemas/MensagemRetorno'
+
+    IndiciSinistro:
+      type: object
+      properties:
+        DESCRICAORETORNO: { type: string }
+        INDICIODESINISTRO: { type: string }
+
+    DescricaoSimples:
+      type: object
+      properties:
+        DESCRICAORETORNO: { type: string }
+
+    RegistroProprietario:
+      type: object
+      properties:
+        CHAVERETORNO: { type: string }
+        OCORRENCIA: { type: string }
+        UF_DUT: { type: string }
+        CODIGOMUNICIPIO: { type: string }
+        MUNICIPIO: { type: string }
+        ANO_EXERCICIO: { type: string }
+        PLACA: { type: string }
+        RENAVAM: { type: string }
+        CHASSI: { type: string }
+        CGC_CPF: { type: string }
+        NOME_PROPRIETARIO: { type: string }
+        TIPO_DOCUMENTO: { type: string }
+        CORRECAO_CHASSI_RENAVAM: { type: string }
+        DATA_PROCESSAMENTO: { type: string }
+        HORA_PROCESSAMENTO: { type: string }
+        MOTIVO_TIPO_AUTORIZACAO: { type: string }
+
+    HistoricoProprietario:
+      type: object
+      properties:
+        DESCRICAORETORNO: { type: string }
+        REGISTRO_1:
+          $ref: '#/components/schemas/RegistroProprietario'
+        REGISTRO_2:
+          $ref: '#/components/schemas/RegistroProprietario'
+        REGISTRO_3:
+          $ref: '#/components/schemas/RegistroProprietario'
+
+    VeicularBNacional:
+      type: object
+      properties:
+        REGISTRO_1:
+          type: object
+          properties:
+            DATA_EMPLACAMENTO: { type: string }
+            CHASSI: { type: string }
+            PLACA: { type: string }
+            PLACA_MODELO_NOVO: { type: string }
+            RENAVAM: { type: string }
+            IDENTIFICACAO_FATURADO: { type: string }
+            UF_DO_FATURADO: { type: string }
+            TIPO_PROPRIETARIO: { type: string }
+            UF: { type: string }
+            MUNICIPIO: { type: string }
+            ANO_FABRICACAO: { type: string }
+            ANO_MODELO: { type: string }
+            MARCA: { type: string }
+            MODELO: { type: string }
+            TIPO_VEICULO: { type: string }
+            ESPECIE_VEICULO: { type: string }
+            CARROCERIA: { type: string }
+            NUMERO_CARROCERIA: { type: string }
+            COR: { type: string }
+            COMBUSTIVEL: { type: string }
+            POTENCIA: { type: string }
+            CILINDRADA: { type: string }
+            NUMERO_LUGAR: { type: string }
+            QUANTIDADE_PASSAGEIRO: { type: string }
+            CAPACIDADE_CARGA: { type: string }
+            PESO_BRUTO_TOTAL: { type: string }
+            CAPACIDADE_MAXIMA_TRACAO: { type: string }
+            PROCEDENCIA_VEICULO: { type: string }
+            SITUACAO_CHASSI: { type: string }
+            NUMERO_CAIXA_CAMBIO: { type: string }
+            NUMERO_EIXO: { type: string }
+            NUMERO_MOTOR: { type: string }
+            TIPO_MONTAGEM: { type: string }
+            ULTIMA_ATUALIZACAO: { type: string }
+            RESTRICAO1: { type: string }
+            RESTRICAO2: { type: string }
+            RESTRICAO3: { type: string }
+            RESTRICAO4: { type: string }
+            SITUACAO_VEICULO: { type: string }
+            NACIONALIDADE: { type: string }
+
+    PrecificadorFipe:
+      type: object
+      properties:
+        DESCRICAORETORNO: { type: string }
+        REGISTRO_1:
+          type: object
+          properties:
+            STATUS: { type: string }
+            CHASSI: { type: string }
+            CODIGOFIPE: { type: string }
+            FABRICANTEFIPE: { type: string }
+            MODELOFIPE: { type: string }
+            ANOMODELOFIPE: { type: string }
+            COMBUSTIVELFIPE: { type: string }
+            PRECOFIPE: { type: string }
+            PRECOMEDIO: { type: string }
+            VIGENCIA: { type: string }
+
+    VeiculosBDRP:
+      type: object
+      properties:
+        DESCRICAORETORNO: { type: string }
+        RETORNO:
+          type: object
+          properties:
+            EXISTE_ERRO: { type: string }
+            MSG_ERRO: { type: string }
+            SITUACAOVEICULO: { type: string }
+            PLACA: { type: string }
+            MUNICIPIO: { type: string }
+            UF: { type: string }
+            RENAVAM: { type: string }
+            CPF_CNPJ_PROPRIETARIO: { type: string }
+            TIPODOCUMENTOPROPRIETARIO: { type: string }
+            PRONOME: { type: string }
+            LICDATA: { type: string }
+            DATAEMISSAOCRV: { type: string }
+            CHASSI: { type: string }
+            MARCAMODELOCOMPLETO: { type: string }
+            MARCA: { type: string }
+            MODELO: { type: string }
+            VEIANOFABR: { type: string }
+            VEIANOMODELO: { type: string }
+            COR: { type: string }
+            COMBUSTIVEL: { type: string }
+            POTENCIA: { type: string }
+            CILINDRADA: { type: string }
+            RESTRICAOFINAN: { type: string }
+            EXISTEDEBITODEIPVA: { type: string }
+            EXISTEDEBITOMULTA: { type: string }
+            DEBIPVA: { type: string }
+            EXISTEDEBITODELICENCIAMENTO: { type: string }
+            VALORTOTALDEBITOMULTA: { type: string }
+            EXISTEDEBITODEDPVAT: { type: string }
+            DPVAT: { type: string }
+            RESFURTO: { type: string }
+            RESGUINCHO: { type: string }
+            RESADMINISTRATIVA: { type: string }
+            RESJUDICIAL: { type: string }
+            RESTRIBUTARIA: { type: string }
+            RESRENAJUD: { type: string }
+            RESAMBIENTAL: { type: string }
+            CCOMUNICACAOVENDA: { type: string }
+            DATA: { type: string }
+            HORA: { type: string }
+
+    MensagemRetorno:
+      type: object
+      properties:
+        MSG: { type: string }
+
+    AuthRequest:
+      type: object
+      required: [client_id, client_secret]
+      properties:
+        client_id:
+          type: string
+          example: "seu-client-id"
+        client_secret:
+          type: string
+          example: "seu-client-secret"
+
+    AuthResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        expires_in:
+          type: integer
+          example: 86400
+
+    PlacaRequest:
+      type: object
+      required: [placa]
+      properties:
+        placa:
+          type: string
+          example: "ABC1234"
+
+    CpfRequest:
+      type: object
+      required: [cpf]
+      properties:
+        cpf:
+          type: string
+          example: "000.000.000-00"
+
+    CnpjRequest:
+      type: object
+      required: [cnpj]
+      properties:
+        cnpj:
+          type: string
+          example: "00.000.000/0001-00"
+
+    CpfCnpjRequest:
+      type: object
+      properties:
+        cpf:
+          type: string
+          example: "000.000.000-00"
+        cnpj:
+          type: string
+          example: "00.000.000/0001-00"
+
+    RenavamRequest:
+      type: object
+      required: [renavam]
+      properties:
+        renavam:
+          type: string
+          example: "00000000000"
+
+    CepRequest:
+      type: object
+      required: [cep]
+      properties:
+        cep:
+          type: string
+          example: "01310-100"
+
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Unauthorized"
+        code:
+          type: integer
+          example: 401
+
+paths:
+
+  # ─────────────────────────────────────────────
+  # AUTH
+  # ─────────────────────────────────────────────
+
+  /auth:
+    post:
+      tags: [Auth]
+      summary: Autenticação
+      description: >
+        Gera um token JWT válido por 24 horas. Use o ClientID e ClientSecret
+        fornecidos pela Credify.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthRequest'
+            example:
+              client_id: "seu-client-id"
+              client_secret: "seu-client-secret"
+      responses:
+        '200':
+          description: Token gerado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: Credenciais inválidas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # ─────────────────────────────────────────────
+  # VEICULARES - SERVIÇOS
+  # ─────────────────────────────────────────────
+
+  /ecrlv:
+    post:
+      tags: [Veiculares - Serviços]
+      summary: ECRLV
+      description: Extrato do CRLV digital. Suporta primeira e segunda requisição.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlacaRequest'
+      responses:
+        '200':
+          description: Sucesso
+        '401':
+          description: Não autorizado
+
+  # ─────────────────────────────────────────────
+  # VEICULARES
+  # ─────────────────────────────────────────────
+
+  /veiculototal:
+    post:
+      tags: [Veiculares]
+      summary: Consulta completa de dados veiculares
+      description: |
+        Retorna informações completas sobre um veículo a partir da placa, incluindo dados cadastrais, histórico de proprietários, situação de roubo/furto, leilão, recall, indício de sinistro e precificação FIPE.
+
+        > **Atenção:** este endpoint agrega múltiplas fontes e consome mais créditos por consulta.
+
+        ## Códigos de retorno (campo CODIGO)
+
+        | Código | Significado |
+        |--------|-------------|
+        | `1` | Sucesso |
+        | `2` | Dado não encontrado na base de dados |
+        | `3` | Erro na consulta |
+
+        ## Blocos de resposta
+
+        | Bloco | Descrição |
+        |-------|-----------|
+        | `INDICIOSINISTROVEICULAR` | Indica se o veículo possui histórico de sinistro |
+        | `RECALL` | Informações de recall do fabricante |
+        | `HISTORICOROUBOFURTO` | Histórico de ocorrências de roubo ou furto |
+        | `LEILAOCONJUGADO` | Indica se o veículo passou por leilão |
+        | `HISTORICOPROPRIETARIO` | Lista de proprietários anteriores e atual |
+        | `VEICULARBNACIONAL` | Dados cadastrais completos do DETRAN nacional |
+        | `PRECIFICADORFIPE` | Precificação FIPE vigente |
+        | `VEICULOSBDRP` | Dados do BDRP com débitos, restrições e situação |
+
+        > **Formato da placa:** use **AAA0000** (padrão antigo) ou **AAA0A00** (padrão Mercosul).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Consulta:
+                  type: object
+                  required:
+                    - IdConsulta
+                    - Placa
+                  properties:
+                    IdConsulta:
+                      type: string
+                      example: "467"
+                    Placa:
+                      type: string
+                      example: "ABC1234"
+      responses:
+        '200':
+          description: |
+            Resposta da consulta:
+            * Código 1: Sucesso.
+            * Código 2: Dado não encontrado na base de dados.
+            * Código 3: Erro na consulta.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RespostaVeiculoTotal'
+              examples:
+                Consulta Sucesso:
+                  value:
+                    CONSULTA:
+                      CODIGORESPOSTA: "100000001"
+                      DATAHORA: "01/01/2026 10:00:00"
+                      LOGON: "00000"
+                      IDCONSULTA: "467"
+                    RESPOSTA:
+                      CODIGO: ["1","2","2","2","1","1","1","1"]
+                      INDICIOSINISTROVEICULAR:
+                        DESCRICAORETORNO: "Sucesso"
+                        INDICIODESINISTRO: "0"
+                      RECALL:
+                        DESCRICAORETORNO: "NAO FOI POSSIVEL LOCALIZAR O VEICULO."
+                      HISTORICOROUBOFURTO:
+                        DESCRICAORETORNO: "O VEÍCULO NÃO FOI APRESENTADO NO HISTÓRICO DE ROUBO OU FURTO."
+                      LEILAOCONJUGADO:
+                        DESCRICAORETORNO: "O VEÍCULO NÃO FOI APRESENTADO NA BASE DE LEILÃO."
+                      HISTORICOPROPRIETARIO:
+                        DESCRICAORETORNO: "SUCESSO"
+                        REGISTRO_1:
+                          CHAVERETORNO: "010101010101010"
+                          OCORRENCIA: "1"
+                          UF_DUT: ""
+                          CODIGOMUNICIPIO: "NAO INFORMADO"
+                          MUNICIPIO: "NAO INFORMADO"
+                          ANO_EXERCICIO: "2024"
+                          PLACA: "ABC1234"
+                          RENAVAM: "00123456789"
+                          CHASSI: "9BWZZZ377VT004251"
+                          CGC_CPF: "12345678900"
+                          NOME_PROPRIETARIO: "JOAO SILVA SANTOS"
+                          TIPO_DOCUMENTO: "NAO INFORMADO"
+                          CORRECAO_CHASSI_RENAVAM: "NAO INFORMADO"
+                          DATA_PROCESSAMENTO: "2024"
+                          HORA_PROCESSAMENTO: "00:00"
+                          MOTIVO_TIPO_AUTORIZACAO: "NAO INFORMADO"
+                        REGISTRO_2:
+                          CHAVERETORNO: "010101010101010"
+                          OCORRENCIA: "2"
+                          UF_DUT: ""
+                          CODIGOMUNICIPIO: "NAO INFORMADO"
+                          MUNICIPIO: "NAO INFORMADO"
+                          ANO_EXERCICIO: "2015"
+                          PLACA: "ABC1234"
+                          RENAVAM: "00123456789"
+                          CHASSI: "9BWZZZ377VT004251"
+                          CGC_CPF: "98765432000110"
+                          NOME_PROPRIETARIO: "AUTOMOVEIS BRASIL LTDA"
+                          TIPO_DOCUMENTO: "NAO INFORMADO"
+                          CORRECAO_CHASSI_RENAVAM: "NAO INFORMADO"
+                          DATA_PROCESSAMENTO: "2015"
+                          HORA_PROCESSAMENTO: "00:00"
+                          MOTIVO_TIPO_AUTORIZACAO: "NAO INFORMADO"
+                      VEICULARBNACIONAL:
+                        REGISTRO_1:
+                          DATA_EMPLACAMENTO: "15-MAR-15"
+                          CHASSI: "9BWZZZ377VT004251"
+                          PLACA: "ABC1234"
+                          PLACA_MODELO_NOVO: "ABC1A34"
+                          RENAVAM: "00123456789"
+                          IDENTIFICACAO_FATURADO: "98765432000110"
+                          UF_DO_FATURADO: "SP"
+                          TIPO_PROPRIETARIO: "FISICA"
+                          UF: "SP"
+                          MUNICIPIO: "SAO PAULO"
+                          ANO_FABRICACAO: "2015"
+                          ANO_MODELO: "2016"
+                          MARCA: "VW"
+                          MODELO: "VW/GOL 1.0"
+                          TIPO_VEICULO: "AUTOMOVEL"
+                          ESPECIE_VEICULO: "PASSAGEIRO"
+                          COR: "PRATA"
+                          COMBUSTIVEL: "FLEX"
+                          POTENCIA: "76"
+                          CILINDRADA: "1000"
+                          QUANTIDADE_PASSAGEIRO: "5"
+                          SITUACAO_VEICULO: "EM CIRCULACAO"
+                          NACIONALIDADE: "NACIONAL"
+                          RESTRICAO1: "SEM RESTRICAO"
+                          RESTRICAO2: "SEM RESTRICAO"
+                          RESTRICAO3: "SEM RESTRICAO"
+                          RESTRICAO4: "SEM RESTRICAO"
+                      PRECIFICADORFIPE:
+                        DESCRICAORETORNO: "SUCESSO"
+                        REGISTRO_1:
+                          STATUS: "1"
+                          CHASSI: "9BWZZZ377VT004251"
+                          CODIGOFIPE: "005843-1"
+                          FABRICANTEFIPE: "VW - VOLKSWAGEN"
+                          MODELOFIPE: "GOL 1.0 FLEX 4P"
+                          ANOMODELOFIPE: "16"
+                          COMBUSTIVELFIPE: "F"
+                          PRECOFIPE: "32.500,00"
+                          PRECOMEDIO: "32.500,00"
+                          VIGENCIA: "06/2026"
+                      VEICULOSBDRP:
+                        DESCRICAORETORNO: "SUCESSO"
+                        RETORNO:
+                          SITUACAOVEICULO: "CIRCULACAO"
+                          PLACA: "ABC1234"
+                          MUNICIPIO: "SAO PAULO-SP"
+                          UF: "SP"
+                          RENAVAM: "00123456789"
+                          CPF_CNPJ_PROPRIETARIO: "12345678900"
+                          PRONOME: "JOAO SILVA SANTOS"
+                          CHASSI: "9BWZZZ377VT004251"
+                          MARCAMODELOCOMPLETO: "VW/GOL 1.0"
+                          VEIANOFABR: "2015"
+                          VEIANOMODELO: "2016"
+                          COR: "PRATA"
+                          COMBUSTIVEL: "FLEX"
+                          EXISTEDEBITODEIPVA: "NAO EXISTE DEBITO DE IPVA"
+                          EXISTEDEBITOMULTA: "NAO EXISTE DEBITO DE MULTA"
+                          EXISTEDEBITODELICENCIAMENTO: "NAO EXISTE DEBITO DE LICENCIAMENTO"
+                          RESTRICAOFINAN: "NADA CONSTA"
+                          RESFURTO: "NADA CONSTA"
+                          RESJUDICIAL: "NADA CONSTA"
+                Consulta Nao Encontrada:
+                  value:
+                    CONSULTA:
+                      CODIGORESPOSTA: "*********"
+                      DATAHORA: "01/01/2026 10:00:00"
+                      LOGON: "*****"
+                      IDCONSULTA: "467"
+                    RESPOSTA:
+                      CODIGO: ["2"]
+                      DADOS:
+                        MSG: "Dado não encontrado na base de dados."
+        '401':
+          description: Token inválido ou expirado
+        '400':
+          description: Bad Request
+
+  /historicoproprietario:
+    post:
+      tags: [Veiculares]
+      summary: Histórico de Proprietários
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlacaRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /historicoroubofurto:
+    post:
+      tags: [Veiculares]
+      summary: Histórico Roubo e Furto
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlacaRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /indiciosinistro:
+    post:
+      tags: [Veiculares]
+      summary: Indício de Sinistro
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlacaRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /leilaoconjugado:
+    post:
+      tags: [Veiculares]
+      summary: Leilão Conjugado
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlacaRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /precificadorfipe:
+    post:
+      tags: [Veiculares]
+      summary: Precificador FIPE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlacaRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /recall:
+    post:
+      tags: [Veiculares]
+      summary: Recall
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlacaRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /renainf:
+    post:
+      tags: [Veiculares]
+      summary: Renainf
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlacaRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /renajud:
+    post:
+      tags: [Veiculares]
+      summary: RENAJUD
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlacaRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /veiculosagregados:
+    post:
+      tags: [Veiculares]
+      summary: Veículos Agregados
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfCnpjRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /veiculodocumento:
+    post:
+      tags: [Veiculares]
+      summary: Veículo por Documento
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfCnpjRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /veiculodocumentofrota:
+    post:
+      tags: [Veiculares]
+      summary: Veículo Documento Frota
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CnpjRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /flagcnh:
+    post:
+      tags: [Veiculares]
+      summary: API Flag CNH
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /cnhdocumento:
+    post:
+      tags: [Veiculares]
+      summary: CNH Documento
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /cnhchavedupla:
+    post:
+      tags: [Veiculares]
+      summary: CNH Chave Dupla
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /cnhdocumentoimagem:
+    post:
+      tags: [Veiculares]
+      summary: CNH Documento Imagem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /cnhpontuacao:
+    post:
+      tags: [Veiculares]
+      summary: CNH Pontuação
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /veiculoproprietarioplaca:
+    post:
+      tags: [Veiculares]
+      summary: Veiculo Proprietário Placa
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlacaRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /veiculoproprietarioplacahistorico:
+    post:
+      tags: [Veiculares]
+      summary: Veiculo Proprietário Placa Histórico
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlacaRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /debitosrestricoesproprietarios:
+    post:
+      tags: [Veiculares]
+      summary: Débitos, Restrições e Proprietários
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlacaRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /veicularbnacionalonline:
+    post:
+      tags: [Veiculares]
+      summary: Veicular BNacional On Line
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlacaRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /atpve:
+    post:
+      tags: [Veiculares]
+      summary: ATPVe
+      description: Cadastrar, Registrar e Recuperar ATPVe.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlacaRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /renavam:
+    post:
+      tags: [Veiculares]
+      summary: Renavam
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RenavamRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /renavamonline:
+    post:
+      tags: [Veiculares]
+      summary: Renavam Online
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RenavamRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /gravame:
+    post:
+      tags: [Veiculares]
+      summary: Gravame
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlacaRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /farolleilao:
+    post:
+      tags: [Veiculares]
+      summary: Farol Leilão
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlacaRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  # ─────────────────────────────────────────────
+  # RELATÓRIO JURÍDICO
+  # ─────────────────────────────────────────────
+
+  /cpfcnpjtotalizador:
+    post:
+      tags: [Relatório Jurídico]
+      summary: Relatório Jurídico - CPF / CNPJ
+      description: Totalizador de processos judiciais por CPF ou CNPJ.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfCnpjRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /nomerazaototalizador:
+    post:
+      tags: [Relatório Jurídico]
+      summary: Relatório Jurídico - Nome / Razão Social
+      description: Totalizador de processos judiciais por nome ou razão social.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nome:
+                  type: string
+                  example: "João da Silva"
+      responses:
+        '200':
+          description: Sucesso
+
+  /detalhesprocesso/id:
+    post:
+      tags: [Relatório Jurídico]
+      summary: Relatório Jurídico Detalhes - ID do Processo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id_processo:
+                  type: string
+                  example: "abc123"
+      responses:
+        '200':
+          description: Sucesso
+
+  /detalhesprocesso/numero:
+    post:
+      tags: [Relatório Jurídico]
+      summary: Relatório Jurídico Detalhes - Número do Processo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                numero_processo:
+                  type: string
+                  example: "0001234-12.2023.8.26.0100"
+      responses:
+        '200':
+          description: Sucesso
+
+  # ─────────────────────────────────────────────
+  # MARKETING
+  # ─────────────────────────────────────────────
+
+  /geraleadscep:
+    post:
+      tags: [Marketing]
+      summary: Gera Leads - CEP
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CepRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /geraleadsuf:
+    post:
+      tags: [Marketing]
+      summary: Gera Leads - UF / Município
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                uf:
+                  type: string
+                  example: "SP"
+                municipio:
+                  type: string
+                  example: "São Paulo"
+      responses:
+        '200':
+          description: Sucesso
+
+  /geraleadsdetalhes:
+    post:
+      tags: [Marketing]
+      summary: Gera Leads - Detalhes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /geraleadsdetalhes/lote:
+    post:
+      tags: [Marketing]
+      summary: Gera Leads - Detalhes Lote
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cpfs:
+                  type: array
+                  items:
+                    type: string
+                  example: ["000.000.000-00", "111.111.111-11"]
+      responses:
+        '200':
+          description: Sucesso
+
+  # ─────────────────────────────────────────────
+  # CADASTRAL PF
+  # ─────────────────────────────────────────────
+
+  /pfpesquisa:
+    post:
+      tags: [Cadastral PF]
+      summary: PF Pesquisa - CPF
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /pftelefonecpf:
+    post:
+      tags: [Cadastral PF]
+      summary: PF Telefone - CPF
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /pfemailcpf:
+    post:
+      tags: [Cadastral PF]
+      summary: PF Email - CPF
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /pfnome:
+    post:
+      tags: [Cadastral PF]
+      summary: PF Nome
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /pftelefone:
+    post:
+      tags: [Cadastral PF]
+      summary: PF Telefone
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /pfemail:
+    post:
+      tags: [Cadastral PF]
+      summary: PF Email
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /parentescopf:
+    post:
+      tags: [Cadastral PF]
+      summary: PF Parentesco
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /pfreceitafederalxpfdadosbasicos:
+    post:
+      tags: [Cadastral PF]
+      summary: PF Receita Federal x PF Dados Básicos
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /pfreceitafederal:
+    post:
+      tags: [Cadastral PF]
+      summary: PF Receita Federal - CPF
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /pfcadastraldataset:
+    post:
+      tags: [Cadastral PF]
+      summary: PF Cadastral Dataset - Dados Básicos
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /scoreforcavinculopf:
+    post:
+      tags: [Cadastral PF]
+      summary: PF Score Força Vínculo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /ocupacaopf:
+    post:
+      tags: [Cadastral PF]
+      summary: API Ocupação PF
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  # ─────────────────────────────────────────────
+  # CADASTRAL PJ
+  # ─────────────────────────────────────────────
+
+  /pjpesquisa:
+    post:
+      tags: [Cadastral PJ]
+      summary: PJ Pesquisa - CNPJ
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CnpjRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /pjtelefonecnpj:
+    post:
+      tags: [Cadastral PJ]
+      summary: PJ Telefone - CNPJ
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CnpjRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /pjemailcnpj:
+    post:
+      tags: [Cadastral PJ]
+      summary: PJ Email - CNPJ
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CnpjRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /pjrazao:
+    post:
+      tags: [Cadastral PJ]
+      summary: PJ Razão Social
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CnpjRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /pjtelefone:
+    post:
+      tags: [Cadastral PJ]
+      summary: PJ Telefone
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CnpjRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /pjemail:
+    post:
+      tags: [Cadastral PJ]
+      summary: PJ Email
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CnpjRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /pjreceitafederal:
+    post:
+      tags: [Cadastral PJ]
+      summary: PJ Receita Federal - CNPJ
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CnpjRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /pjcadastraldataset:
+    post:
+      tags: [Cadastral PJ]
+      summary: PJ Cadastral Dataset - Dados Básicos
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CnpjRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /quadrosocietario:
+    post:
+      tags: [Cadastral PJ]
+      summary: PJ API Quadro Societário
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CnpjRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /beneficiariofinalpj:
+    post:
+      tags: [Cadastral PJ]
+      summary: PJ Beneficiário Final
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CnpjRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  # ─────────────────────────────────────────────
+  # KYC
+  # ─────────────────────────────────────────────
+
+  /sancoes:
+    post:
+      tags: [KYC]
+      summary: KYC Compliance Sanções
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfCnpjRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /kycrh:
+    post:
+      tags: [KYC]
+      summary: KYC RH
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /kycbet:
+    post:
+      tags: [KYC]
+      summary: KYC BET
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  # ─────────────────────────────────────────────
+  # BACKGROUND CHECKS E ANTIFRAUDE
+  # ─────────────────────────────────────────────
+
+  /backgroundcheckpf:
+    post:
+      tags: [Background Checks e Antifraude]
+      summary: Background Check PF
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /backgroundcheckpj:
+    post:
+      tags: [Background Checks e Antifraude]
+      summary: Background Check PJ
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CnpjRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /exposicaopublicapf:
+    post:
+      tags: [Background Checks e Antifraude]
+      summary: Exposição Pública PF
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /exposicaopublicapj:
+    post:
+      tags: [Background Checks e Antifraude]
+      summary: Exposição Pública PJ
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CnpjRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /autenticatitularcartao:
+    post:
+      tags: [Background Checks e Antifraude]
+      summary: Autentica Titular Cartão
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cpf:
+                  type: string
+                  example: "000.000.000-00"
+                bin:
+                  type: string
+                  example: "411111"
+      responses:
+        '200':
+          description: Sucesso
+
+  /ccf:
+    post:
+      tags: [Background Checks e Antifraude]
+      summary: CCF Cheques sem Fundos
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfCnpjRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /crednetlight:
+    post:
+      tags: [Background Checks e Antifraude]
+      summary: Crednet Light (Pendências)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfCnpjRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /scorebancosfinanceiraspf:
+    post:
+      tags: [Background Checks e Antifraude]
+      summary: PF Score Bancos e Financeiras
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /scorebancosfinanceiraspj:
+    post:
+      tags: [Background Checks e Antifraude]
+      summary: PJ Score Bancos e Financeiras
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CnpjRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /proprietariotelefoneoperadora:
+    post:
+      tags: [Background Checks e Antifraude]
+      summary: Proprietário Telefone Operadora
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                telefone:
+                  type: string
+                  example: "11999999999"
+      responses:
+        '200':
+          description: Sucesso
+
+  /faturamentopresumidopj:
+    post:
+      tags: [Background Checks e Antifraude]
+      summary: Faturamento Presumido PJ
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CnpjRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /faturamentopresumidopjcredify:
+    post:
+      tags: [Background Checks e Antifraude]
+      summary: API Faturamento Presumido PJ Credify
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CnpjRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /rendapresumida:
+    post:
+      tags: [Background Checks e Antifraude]
+      summary: PF Renda Presumida Bancos
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /rendapresumidacredify:
+    post:
+      tags: [Background Checks e Antifraude]
+      summary: API Renda Presumida PF Credify
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /debitosestaduaispj:
+    post:
+      tags: [Background Checks e Antifraude]
+      summary: Débitos Estaduais PJ
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CnpjRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /validabin:
+    post:
+      tags: [Background Checks e Antifraude]
+      summary: API Valida BIN
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                bin:
+                  type: string
+                  example: "411111"
+      responses:
+        '200':
+          description: Sucesso
+
+  /validacadastral:
+    post:
+      tags: [Background Checks e Antifraude]
+      summary: Validação Cadastral
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfCnpjRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /autenticaemail:
+    post:
+      tags: [Background Checks e Antifraude]
+      summary: Autentica Email
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: "exemplo@email.com"
+      responses:
+        '200':
+          description: Sucesso
+
+  /autenticaemailipendereco:
+    post:
+      tags: [Background Checks e Antifraude]
+      summary: Autentica Email IP Endereço
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: "exemplo@email.com"
+                ip:
+                  type: string
+                  example: "192.168.0.1"
+      responses:
+        '200':
+          description: Sucesso
+
+  /emailhistoryrisk:
+    post:
+      tags: [Background Checks e Antifraude]
+      summary: Email History Risk
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: "exemplo@email.com"
+      responses:
+        '200':
+          description: Sucesso
+
+  /validatelefonedocumento:
+    post:
+      tags: [Background Checks e Antifraude]
+      summary: Validação de Telefone por Documento
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                telefone:
+                  type: string
+                  example: "11999999999"
+                cpf:
+                  type: string
+                  example: "000.000.000-00"
+      responses:
+        '200':
+          description: Sucesso
+
+  /validawhatsapp:
+    post:
+      tags: [Background Checks e Antifraude]
+      summary: Validação de WhatsApp
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                telefone:
+                  type: string
+                  example: "11999999999"
+      responses:
+        '200':
+          description: Sucesso
+
+  /biometriafacial1x1:
+    post:
+      tags: [Background Checks e Antifraude]
+      summary: Validação Biometria Facial 1x1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cpf:
+                  type: string
+                  example: "000.000.000-00"
+                imagem_base64:
+                  type: string
+                  example: "base64encodedimage"
+      responses:
+        '200':
+          description: Sucesso
+
+  /biometriafacial1xn:
+    post:
+      tags: [Background Checks e Antifraude]
+      summary: Validação Biométrica Facial 1xN
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                imagem_base64:
+                  type: string
+                  example: "base64encodedimage"
+      responses:
+        '200':
+          description: Sucesso
+
+  /biometriafacialdatavalid:
+    post:
+      tags: [Background Checks e Antifraude]
+      summary: Biometria Facial - Datavalid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cpf:
+                  type: string
+                  example: "000.000.000-00"
+                imagem_base64:
+                  type: string
+                  example: "base64encodedimage"
+      responses:
+        '200':
+          description: Sucesso
+
+  # ─────────────────────────────────────────────
+  # OUTROS
+  # ─────────────────────────────────────────────
+
+  /mandadosprisao:
+    post:
+      tags: [Outros]
+      summary: Mandados de Prisão
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /documentoscopiadigital:
+    post:
+      tags: [Outros]
+      summary: Documentoscopia Digital
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                imagem_base64:
+                  type: string
+                  example: "base64encodedimage"
+      responses:
+        '200':
+          description: Sucesso
+
+  /documentoscopiaidentificacao:
+    post:
+      tags: [Outros]
+      summary: Documentoscopia de Documentos de Identificação
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                imagem_base64:
+                  type: string
+                  example: "base64encodedimage"
+      responses:
+        '200':
+          description: Sucesso
+
+  /sso:
+    post:
+      tags: [Outros]
+      summary: SSO
+      description: Autenticação via Single Sign-On.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token_sso:
+                  type: string
+                  example: "sso-token-aqui"
+      responses:
+        '200':
+          description: Sucesso
+
+  /webhook:
+    post:
+      tags: [Outros]
+      summary: Webhook (Decisionfy)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                url:
+                  type: string
+                  example: "https://seudominio.com/webhook"
+                evento:
+                  type: string
+                  example: "consulta.finalizada"
+      responses:
+        '200':
+          description: Sucesso
+
+  /sintegra:
+    post:
+      tags: [Outros]
+      summary: API Sintegra
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CnpjRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /fgts:
+    post:
+      tags: [Outros]
+      summary: API FGTS
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+tags:
+  - name: Auth
+    description: Autenticação e geração de token JWT
+  - name: Veiculares - Serviços
+    description: Serviços de documentação veicular (ECRLV)
+  - name: Veiculares
+    description: Consultas veiculares - placa, CNH, histórico, leilão, FIPE e mais
+  - name: Relatório Jurídico
+    description: Processos judiciais - totalizadores e detalhes de processos
+  - name: Marketing
+    description: Geração de leads por CEP, UF e município
+  - name: Cadastral PF
+    description: Dados cadastrais de Pessoa Física via CPF
+  - name: Cadastral PJ
+    description: Dados cadastrais de Pessoa Jurídica via CNPJ
+  - name: KYC
+    description: Know Your Customer - compliance, sanções, RH e BET
+  - name: Background Checks e Antifraude
+    description: Verificações de risco, fraude, biometria, score e validações
+  - name: Outros
+    description: Documentoscopia, SSO, Webhook, Sintegra e FGTS
