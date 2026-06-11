@@ -1,0 +1,15 @@
+post:
+  tags: [Consulta Veicular]
+  summary: Veicular BNacional Online
+  description: Consulta online ao Banco Nacional de Dados Veiculares (BNacional) a partir da placa.
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../openapi.yaml#/components/schemas/PlacaRequest'
+  responses:
+    '200':
+      description: Sucesso
+    '401':
+      description: Token inválido ou expirado

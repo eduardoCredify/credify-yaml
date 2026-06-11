@@ -1,0 +1,250 @@
+paths:
+  /geraleadsuf:
+    post:
+      x-fern-examples:
+        - {}
+  /cpfcnpjtotalizador:
+    post:
+      x-fern-examples:
+        - {}
+  /validawhatsapp:
+    post:
+      x-fern-examples:
+        - {}
+  /autenticatitularcartao:
+    post:
+      x-fern-examples:
+        - {}
+  /biometriafacialdatavalid:
+    post:
+      x-fern-examples:
+        - {}
+  /documentoscopiaidentificacao:
+    post:
+      x-fern-examples:
+        - {}
+  /biometriafacial1xn:
+    post:
+      x-fern-examples:
+        - {}
+  /validatelefonedocumento:
+    post:
+      x-fern-examples:
+        - {}
+  /autenticaemailipendereco:
+    post:
+      x-fern-examples:
+        - {}
+  /veiculodocumento:
+    post:
+      x-fern-examples:
+        - {}
+  /proprietariotelefoneoperadora:
+    post:
+      x-fern-examples:
+        - {}
+  /emailhistoryrisk:
+    post:
+      x-fern-examples:
+        - {}
+  /detalhesprocesso/id:
+    post:
+      x-fern-examples:
+        - {}
+  /sso:
+    post:
+      x-fern-examples:
+        - {}
+  /veiculosagregados:
+    post:
+      x-fern-examples:
+        - {}
+  /detalhesprocesso/numero:
+    post:
+      x-fern-examples:
+        - {}
+  /nomerazaototalizador:
+    post:
+      x-fern-examples:
+        - {}
+  /webhook:
+    post:
+      x-fern-examples:
+        - {}
+  /documentoscopiadigital:
+    post:
+      x-fern-examples:
+        - {}
+  /sancoes:
+    post:
+      x-fern-examples:
+        - {}
+  /validabin:
+    post:
+      x-fern-examples:
+        - {}
+  /ccf:
+    post:
+      x-fern-examples:
+        - {}
+  /geraleadsdetalhes/lote:
+    post:
+      x-fern-examples:
+        - {}
+  /validacadastral:
+    post:
+      x-fern-examples:
+        - {}
+  /biometriafacial1x1:
+    post:
+      x-fern-examples:
+        - {}
+  /crednetlight:
+    post:
+      x-fern-examples:
+        - {}
+  /autenticaemail:
+    post:
+      x-fern-examples:
+        - {}
+  /veiculototal:
+    post:
+      x-fern-examples:
+        - response:
+            body:
+              CONSULTA:
+                CODIGORESPOSTA: '1'
+                DATAHORA: '2024-06-15T10:45:00Z'
+                LOGON: user123
+                IDCONSULTA: abc123xyz789
+              RESPOSTA:
+                CODIGO:
+                  - '1'
+                INDICIOSINISTROVEICULAR:
+                  DESCRICAORETORNO: Veículo sem histórico de sinistro registrado.
+                  INDICIODESINISTRO: 'N'
+                RECALL:
+                  DESCRICAORETORNO: Nenhum recall ativo para este veículo.
+                HISTORICOROUBOFURTO:
+                  DESCRICAORETORNO: Sem registros de roubo ou furto.
+                LEILAOCONJUGADO:
+                  DESCRICAORETORNO: Veículo não passou por leilão.
+                HISTORICOPROPRIETARIO:
+                  DESCRICAORETORNO: Histórico de proprietários disponível.
+                  REGISTRO_1:
+                    CHAVERETORNO: '0001'
+                    OCORRENCIA: Transferência de propriedade
+                    UF_DUT: SP
+                    CODIGOMUNICIPIO: '3550308'
+                    MUNICIPIO: São Paulo
+                    ANO_EXERCICIO: '2020'
+                    PLACA: ABC1234
+                    RENAVAM: '12345678901'
+                    CHASSI: 9BWZZZ377VT004251
+                    CGC_CPF: '12345678909'
+                    NOME_PROPRIETARIO: João da Silva
+                    TIPO_DOCUMENTO: CPF
+                    CORRECAO_CHASSI_RENAVAM: 'N'
+                    DATA_PROCESSAMENTO: '2020-05-10'
+                    HORA_PROCESSAMENTO: '14:30:00'
+                    MOTIVO_TIPO_AUTORIZACAO: Venda
+                  REGISTRO_2:
+                    CHAVERETORNO: '0002'
+                    OCORRENCIA: Transferência de propriedade
+                    UF_DUT: RJ
+                    CODIGOMUNICIPIO: '3304557'
+                    MUNICIPIO: Rio de Janeiro
+                    ANO_EXERCICIO: '2018'
+                    PLACA: ABC1234
+                    RENAVAM: '12345678901'
+                    CHASSI: 9BWZZZ377VT004251
+                    CGC_CPF: '98765432100'
+                    NOME_PROPRIETARIO: Maria Oliveira
+                    TIPO_DOCUMENTO: CPF
+                    CORRECAO_CHASSI_RENAVAM: 'N'
+                    DATA_PROCESSAMENTO: '2018-03-22'
+                    HORA_PROCESSAMENTO: '09:15:00'
+                    MOTIVO_TIPO_AUTORIZACAO: Compra
+                  REGISTRO_3:
+                    CHAVERETORNO: '0003'
+                    OCORRENCIA: Registro inicial
+                    UF_DUT: MG
+                    CODIGOMUNICIPIO: '3106200'
+                    MUNICIPIO: Belo Horizonte
+                    ANO_EXERCICIO: '2015'
+                    PLACA: ABC1234
+                    RENAVAM: '12345678901'
+                    CHASSI: 9BWZZZ377VT004251
+                    CGC_CPF: '11223344556'
+                    NOME_PROPRIETARIO: Auto Importadora Ltda
+                    TIPO_DOCUMENTO: CNPJ
+                    CORRECAO_CHASSI_RENAVAM: 'N'
+                    DATA_PROCESSAMENTO: '2015-01-10'
+                    HORA_PROCESSAMENTO: '11:00:00'
+                    MOTIVO_TIPO_AUTORIZACAO: Registro inicial
+                VEICULARBNACIONAL:
+                  REGISTRO_1:
+                    DATA_EMPLACAMENTO: '2015-01-15'
+                    CHASSI: 9BWZZZ377VT004251
+                    PLACA: ABC1234
+                    PLACA_MODELO_NOVO: ABC1D23
+                    RENAVAM: '12345678901'
+                    IDENTIFICACAO_FATURADO: F
+                    UF_DO_FATURADO: MG
+                    TIPO_PROPRIETARIO: Particular
+                    UF: SP
+                    MUNICIPIO: São Paulo
+                    ANO_FABRICACAO: '2014'
+                    ANO_MODELO: '2015'
+                    MARCA: Volkswagen
+                    MODELO: Golf 1.4 TSI
+                    TIPO_VEICULO: Automóvel
+                    ESPECIE_VEICULO: Passeio
+                    COR: Prata
+                    COMBUSTIVEL: Gasolina
+                    POTENCIA: '140'
+                    CILINDRADA: '1395'
+                    QUANTIDADE_PASSAGEIRO: '5'
+                    SITUACAO_VEICULO: Regular
+                    NACIONALIDADE: Nacional
+                    RESTRICAO1: Nenhuma
+                    RESTRICAO2: Nenhuma
+                    RESTRICAO3: Nenhuma
+                    RESTRICAO4: Nenhuma
+                PRECIFICADORFIPE:
+                  DESCRICAORETORNO: Consulta realizada com sucesso.
+                  REGISTRO_1:
+                    STATUS: Ativo
+                    CHASSI: 9BWZZZ377VT004251
+                    CODIGOFIPE: 005123-0
+                    FABRICANTEFIPE: Volkswagen
+                    MODELOFIPE: Golf 1.4 TSI
+                    ANOMODELOFIPE: '2015'
+                    COMBUSTIVELFIPE: Gasolina
+                    PRECOFIPE: R$ 55.000,00
+                    PRECOMEDIO: R$ 54.500,00
+                    VIGENCIA: 2024-06
+                VEICULOSBDRP:
+                  DESCRICAORETORNO: Dados atualizados conforme base BDRP.
+                  RETORNO:
+                    SITUACAOVEICULO: Regular
+                    PLACA: ABC1234
+                    MUNICIPIO: São Paulo
+                    UF: SP
+                    RENAVAM: '12345678901'
+                    CPF_CNPJ_PROPRIETARIO: '12345678909'
+                    PRONOME: João da Silva
+                    CHASSI: 9BWZZZ377VT004251
+                    MARCAMODELOCOMPLETO: Volkswagen Golf 1.4 TSI 2015
+                    VEIANOFABR: '2014'
+                    VEIANOMODELO: '2015'
+                    COR: Prata
+                    COMBUSTIVEL: Gasolina
+                    RESTRICAOFINAN: Nenhuma
+                    EXISTEDEBITODEIPVA: Não
+                    EXISTEDEBITOMULTA: Não
+                    EXISTEDEBITODELICENCIAMENTO: Não
+                    RESFURTO: Não
+                    RESJUDICIAL: Não
+                DADOS:
+                  MSG: Consulta realizada com sucesso.

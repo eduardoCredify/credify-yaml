@@ -1,0 +1,15 @@
+post:
+  tags: [Consulta Veicular]
+  summary: Histórico Roubo e Furto
+  description: Verifica se o veículo possui ocorrências de roubo ou furto registradas.
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../openapi.yaml#/components/schemas/PlacaRequest'
+  responses:
+    '200':
+      description: Sucesso
+    '401':
+      description: Token inválido ou expirado

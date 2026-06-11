@@ -1,0 +1,15 @@
+post:
+  tags: [Consulta Veicular]
+  summary: Veículo Documento Frota
+  description: Retorna todos os veículos de frota vinculados a um CNPJ.
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../openapi.yaml#/components/schemas/CnpjRequest'
+  responses:
+    '200':
+      description: Sucesso
+    '401':
+      description: Token inválido ou expirado

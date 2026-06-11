@@ -1,0 +1,574 @@
+post:
+  operationId: consultarVeiculoTotal
+  tags: [Consulta Veicular]
+  summary: Veículo Total
+  description: |
+    A **Consulta Veículo Total** entrega uma análise completa de um veículo a partir da placa, consolidando em uma única chamada **8 integrações** com as principais bases públicas e regulatórias do Brasil. Cada bloco do retorno representa uma fonte de dados independente, permitindo que sua plataforma avalie com precisão a situação real do veículo.
+
+    <Note>
+    Indicada para processos de **vistoria, financiamento, seguro e compra e venda de veículos**.
+    </Note>
+
+    ## Integrações que compõem este produto
+
+    | Integração | O que entrega |
+    |:-----------|:--------------|
+    | `VEICULARBNACIONAL` | Dados fabris: marca, modelo, chassi, RENAVAM, situação e restrições |
+    | `HISTORICOPROPRIETARIO` | Cadeia completa de proprietários com CPF/CNPJ e ano de exercício |
+    | `VEICULOSBDRP` | Débitos (IPVA, multa, licenciamento, DPVAT), restrições ativas e comunicação de venda |
+    | `PRECIFICADORFIPE` | Código FIPE, preço de referência e preço médio com vigência |
+    | `INDICIOSINISTROVEICULAR` | Indício de sinistro veicular — `0` = sem indício |
+    | `HISTORICOROUBOFURTO` | Ocorrências de roubo ou furto em bases policiais |
+    | `LEILAOCONJUGADO` | Histórico de participação em leilões conjugados |
+    | `RECALL` | Recall ativo ou pendente junto ao fabricante |
+
+    ### 🏭 Informações Fabris — VEICULARBNACIONAL
+    Dados cadastrais completos provenientes do Banco Nacional de Dados Veiculares (DENATRAN):
+    - Marca, modelo, ano de fabricação e ano do modelo
+    - Chassi, RENAVAM, placa e placa padrão Mercosul
+    - Cor, combustível, potência e cilindrada
+    - Tipo, espécie, carroceria e número de passageiros
+    - Situação do veículo (ex: `EM CIRCULACAO`)
+    - Restrições cadastrais (RESTRICAO1 a RESTRICAO4) e data de emplacamento
+
+    ### 👥 Histórico de Proprietários — HISTORICOPROPRIETARIO
+    Rastreio completo da cadeia de propriedade do veículo desde sua origem:
+    - Nome completo e CPF/CNPJ de cada proprietário (pessoa física ou jurídica)
+    - Ano de exercício e data de processamento por ocorrência
+    - Identificação de todas as transferências de titularidade
+
+    ### 📋 Situação, Débitos e Restrições — VEICULOSBDRP
+    Dados atualizados do BDRP (Base de Dados de Registro de Proprietários) com a situação completa do veículo:
+    - Débitos de IPVA, multas, licenciamento e DPVAT com valores detalhados
+    - Restrições financeiras, judiciais, administrativas, tributárias e ambientais
+    - Situação de roubo/furto, guincho e RENAJUD
+    - Comunicação de venda ativa: dados do comprador, data e protocolo DETRAN
+    - Inspeção veicular ambiental
+
+    ### 💰 Precificação FIPE — PRECIFICADORFIPE
+    Valor de mercado atualizado com a tabela FIPE vigente:
+    - Código FIPE, fabricante e descrição completa do modelo
+    - Preço de referência FIPE e preço médio de mercado
+    - Mês e ano de vigência da tabela consultada
+
+    ### ⚠️ Indício de Sinistro — INDICIOSINISTROVEICULAR
+    Verifica se há indícios de sinistro veicular registrados para o chassi consultado.
+    Campo `INDICIODESINISTRO`: `0` = sem indício, `1` = indício identificado.
+
+    ### 🚨 Histórico de Roubo e Furto — HISTORICOROUBOFURTO
+    Consulta ocorrências de roubo ou furto registradas para o veículo nas bases policiais.
+
+    ### 🏷️ Leilão — LEILAOCONJUGADO
+    Verifica se o veículo possui histórico de participação em leilões conjugados.
+
+    ### 🔔 Recall — RECALL
+    Consulta junto ao fabricante se o veículo possui recall ativo ou pendente de execução.
+
+    ## TABELA DE CAMPOS DE REQUISIÇÃO
+
+    | **Campo** | **Descrição** | **Formato** | **Obrigatório** |
+    |-----------|---------------|-------------|-----------------|
+    | **IdConsulta** | Identificador da consulta. | string | Sim |
+    | **Placa** | Placa do veículo a ser consultado. | string | Sim |
+
+    <Accordion title="TABELA DE CAMPOS DE RETORNO">
+
+    | **Campo** | **Descrição** | **Formato** |
+    |:----------|:--------------|:------------|
+    | **CONSULTA.CODIGORESPOSTA** | Número do protocolo de retorno gerado pelo servidor da API. | string |
+    | **CONSULTA.DATAHORA** | Data e hora exata em que o processamento foi concluído. | string |
+    | **CONSULTA.LOGON** | Código de identificação da credencial de acesso que realizou a chamada. | string |
+    | **CONSULTA.IDCONSULTA** | Código identificador retornado para conciliação com o enviado na requisição. | string |
+    | **CODIGO** | Array com os códigos de status de cada base consultada (1 = Sucesso, 2 = Não Encontrado, 3 = Erro). | array |
+    | **INDICIOSINISTROVEICULAR.DESCRICAORETORNO** | Descrição textual do resultado da consulta de indício de sinistro. | string |
+    | **INDICIOSINISTROVEICULAR.INDICIODESINISTRO** | Indica se há indício de sinistro veicular (0 = Sem indício). | string |
+    | **RECALL.DESCRICAORETORNO** | Descrição do resultado da consulta de recall junto ao fabricante. | string |
+    | **HISTORICOROUBOFURTO.DESCRICAORETORNO** | Descrição do resultado da consulta de histórico de roubo ou furto. | string |
+    | **LEILAOCONJUGADO.DESCRICAORETORNO** | Descrição do resultado da consulta de participação em leilão. | string |
+    | **HISTORICOPROPRIETARIO.DESCRICAORETORNO** | Descrição textual do resultado da consulta de histórico de proprietários. | string |
+    | **HISTORICOPROPRIETARIO.REGISTRO_N.CHAVERETORNO** | Chave única de identificação do retorno da ocorrência. | string |
+    | **HISTORICOPROPRIETARIO.REGISTRO_N.OCORRENCIA** | Número sequencial da ocorrência no histórico de proprietários. | string |
+    | **HISTORICOPROPRIETARIO.REGISTRO_N.UF_DUT** | UF do DUT (Documento Único de Transferência) do proprietário. | string |
+    | **HISTORICOPROPRIETARIO.REGISTRO_N.CODIGOMUNICIPIO** | Código do município do proprietário. | string |
+    | **HISTORICOPROPRIETARIO.REGISTRO_N.MUNICIPIO** | Nome do município do proprietário. | string |
+    | **HISTORICOPROPRIETARIO.REGISTRO_N.ANO_EXERCICIO** | Ano de exercício do registro do proprietário. | string |
+    | **HISTORICOPROPRIETARIO.REGISTRO_N.PLACA** | Placa do veículo vinculada ao registro. | string |
+    | **HISTORICOPROPRIETARIO.REGISTRO_N.RENAVAM** | Número do RENAVAM do veículo. | string |
+    | **HISTORICOPROPRIETARIO.REGISTRO_N.CHASSI** | Número do chassi do veículo. | string |
+    | **HISTORICOPROPRIETARIO.REGISTRO_N.CGC_CPF** | CPF ou CNPJ do proprietário registrado. | string |
+    | **HISTORICOPROPRIETARIO.REGISTRO_N.NOME_PROPRIETARIO** | Nome completo ou razão social do proprietário. | string |
+    | **HISTORICOPROPRIETARIO.REGISTRO_N.TIPO_DOCUMENTO** | Tipo de documento do proprietário. | string |
+    | **HISTORICOPROPRIETARIO.REGISTRO_N.CORRECAO_CHASSI_RENAVAM** | Indica se houve correção no chassi ou RENAVAM. | string |
+    | **HISTORICOPROPRIETARIO.REGISTRO_N.DATA_PROCESSAMENTO** | Ano de processamento do registro. | string |
+    | **HISTORICOPROPRIETARIO.REGISTRO_N.HORA_PROCESSAMENTO** | Hora de processamento do registro. | string |
+    | **HISTORICOPROPRIETARIO.REGISTRO_N.MOTIVO_TIPO_AUTORIZACAO** | Motivo ou tipo de autorização associado ao registro. | string |
+    | **VEICULARBNACIONAL.REGISTRO_1.DATA_EMPLACAMENTO** | Data de emplacamento do veículo. | string |
+    | **VEICULARBNACIONAL.REGISTRO_1.CHASSI** | Número do chassi do veículo. | string |
+    | **VEICULARBNACIONAL.REGISTRO_1.PLACA** | Placa do veículo. | string |
+    | **VEICULARBNACIONAL.REGISTRO_1.PLACA_MODELO_NOVO** | Placa no padrão Mercosul. | string |
+    | **VEICULARBNACIONAL.REGISTRO_1.RENAVAM** | Número do RENAVAM do veículo. | string |
+    | **VEICULARBNACIONAL.REGISTRO_1.IDENTIFICACAO_FATURADO** | CPF ou CNPJ do faturado. | string |
+    | **VEICULARBNACIONAL.REGISTRO_1.UF_DO_FATURADO** | UF do faturado. | string |
+    | **VEICULARBNACIONAL.REGISTRO_1.TIPO_PROPRIETARIO** | Tipo do proprietário (FISICA ou JURIDICA). | string |
+    | **VEICULARBNACIONAL.REGISTRO_1.UF** | UF de registro do veículo. | string |
+    | **VEICULARBNACIONAL.REGISTRO_1.MUNICIPIO** | Município de registro do veículo. | string |
+    | **VEICULARBNACIONAL.REGISTRO_1.ANO_FABRICACAO** | Ano de fabricação do veículo. | string |
+    | **VEICULARBNACIONAL.REGISTRO_1.ANO_MODELO** | Ano do modelo do veículo. | string |
+    | **VEICULARBNACIONAL.REGISTRO_1.MARCA** | Marca do veículo. | string |
+    | **VEICULARBNACIONAL.REGISTRO_1.MODELO** | Modelo do veículo. | string |
+    | **VEICULARBNACIONAL.REGISTRO_1.TIPO_VEICULO** | Tipo do veículo (ex: AUTOMOVEL). | string |
+    | **VEICULARBNACIONAL.REGISTRO_1.ESPECIE_VEICULO** | Espécie do veículo (ex: MISTO, PASSAGEIRO). | string |
+    | **VEICULARBNACIONAL.REGISTRO_1.CARROCERIA** | Tipo de carroceria do veículo. | string |
+    | **VEICULARBNACIONAL.REGISTRO_1.NUMERO_CARROCERIA** | Número da carroceria do veículo. | string |
+    | **VEICULARBNACIONAL.REGISTRO_1.COR** | Cor do veículo. | string |
+    | **VEICULARBNACIONAL.REGISTRO_1.COMBUSTIVEL** | Tipo de combustível do veículo. | string |
+    | **VEICULARBNACIONAL.REGISTRO_1.POTENCIA** | Potência do motor em cavalos. | string |
+    | **VEICULARBNACIONAL.REGISTRO_1.CILINDRADA** | Cilindrada do motor. | string |
+    | **VEICULARBNACIONAL.REGISTRO_1.NUMERO_LUGAR** | Número de lugares do veículo. | string |
+    | **VEICULARBNACIONAL.REGISTRO_1.QUANTIDADE_PASSAGEIRO** | Quantidade de passageiros. | string |
+    | **VEICULARBNACIONAL.REGISTRO_1.CAPACIDADE_CARGA** | Capacidade de carga em kg. | string |
+    | **VEICULARBNACIONAL.REGISTRO_1.PESO_BRUTO_TOTAL** | Peso bruto total do veículo. | string |
+    | **VEICULARBNACIONAL.REGISTRO_1.CAPACIDADE_MAXIMA_TRACAO** | Capacidade máxima de tração. | string |
+    | **VEICULARBNACIONAL.REGISTRO_1.PROCEDENCIA_VEICULO** | Procedência do veículo (nacional ou importado). | string |
+    | **VEICULARBNACIONAL.REGISTRO_1.SITUACAO_CHASSI** | Situação do chassi do veículo. | string |
+    | **VEICULARBNACIONAL.REGISTRO_1.NUMERO_CAIXA_CAMBIO** | Número da caixa de câmbio. | string |
+    | **VEICULARBNACIONAL.REGISTRO_1.NUMERO_EIXO** | Número de eixos do veículo. | string |
+    | **VEICULARBNACIONAL.REGISTRO_1.NUMERO_EIXO_TRASEIRO_DIFERENCIAL** | Número do eixo traseiro diferencial. | string |
+    | **VEICULARBNACIONAL.REGISTRO_1.NUMERO_TERCEIRO_EIXO** | Número do terceiro eixo (quando aplicável). | string |
+    | **VEICULARBNACIONAL.REGISTRO_1.NUMERO_MOTOR** | Número do motor do veículo. | string |
+    | **VEICULARBNACIONAL.REGISTRO_1.TIPO_MONTAGEM** | Tipo de montagem do veículo (ex: COMPLETA). | string |
+    | **VEICULARBNACIONAL.REGISTRO_1.TIPO_DOCUMENTO_IMPORTADORA** | Tipo de documento da importadora. | string |
+    | **VEICULARBNACIONAL.REGISTRO_1.IDENTIFICACAO_IMPORTADORA** | Identificação da importadora. | string |
+    | **VEICULARBNACIONAL.REGISTRO_1.NUMERO_DI** | Número da Declaração de Importação. | string |
+    | **VEICULARBNACIONAL.REGISTRO_1.DATA_REGISTRO_DI** | Data de registro da Declaração de Importação. | string |
+    | **VEICULARBNACIONAL.REGISTRO_1.UNIDADE_LOCAL_SRF** | Unidade local da Receita Federal. | string |
+    | **VEICULARBNACIONAL.REGISTRO_1.ULTIMA_ATUALIZACAO** | Data da última atualização do registro. | string |
+    | **VEICULARBNACIONAL.REGISTRO_1.RESTRICAO1** | Primeira restrição registrada sobre o veículo. | string |
+    | **VEICULARBNACIONAL.REGISTRO_1.RESTRICAO2** | Segunda restrição registrada sobre o veículo. | string |
+    | **VEICULARBNACIONAL.REGISTRO_1.RESTRICAO3** | Terceira restrição registrada sobre o veículo. | string |
+    | **VEICULARBNACIONAL.REGISTRO_1.RESTRICAO4** | Quarta restrição registrada sobre o veículo. | string |
+    | **VEICULARBNACIONAL.REGISTRO_1.DATA_LIMITE_RESTRICAO** | Data limite de vigência da restrição. | string |
+    | **VEICULARBNACIONAL.REGISTRO_1.SITUACAO_VEICULO** | Situação atual do veículo (ex: EM CIRCULACAO). | string |
+    | **VEICULARBNACIONAL.REGISTRO_1.NACIONALIDADE** | Nacionalidade do veículo (NACIONAL ou IMPORTADO). | string |
+    | **PRECIFICADORFIPE.DESCRICAORETORNO** | Descrição textual do resultado da consulta FIPE. | string |
+    | **PRECIFICADORFIPE.REGISTRO_1.STATUS** | Status do retorno da consulta FIPE. | string |
+    | **PRECIFICADORFIPE.REGISTRO_1.CHASSI** | Chassi utilizado na consulta FIPE. | string |
+    | **PRECIFICADORFIPE.REGISTRO_1.CODIGOFIPE** | Código FIPE do veículo. | string |
+    | **PRECIFICADORFIPE.REGISTRO_1.FABRICANTEFIPE** | Nome do fabricante conforme tabela FIPE. | string |
+    | **PRECIFICADORFIPE.REGISTRO_1.MODELOFIPE** | Descrição completa do modelo conforme tabela FIPE. | string |
+    | **PRECIFICADORFIPE.REGISTRO_1.ANOMODELOFIPE** | Ano do modelo conforme tabela FIPE. | string |
+    | **PRECIFICADORFIPE.REGISTRO_1.COMBUSTIVELFIPE** | Tipo de combustível conforme tabela FIPE (G = Gasolina, F = Flex, D = Diesel). | string |
+    | **PRECIFICADORFIPE.REGISTRO_1.PRECOFIPE** | Preço de referência FIPE do veículo. | string |
+    | **PRECIFICADORFIPE.REGISTRO_1.PRECOMEDIO** | Preço médio de mercado do veículo. | string |
+    | **PRECIFICADORFIPE.REGISTRO_1.VIGENCIA** | Mês e ano de vigência da tabela FIPE consultada. | string |
+    | **VEICULOSBDRP.DESCRICAORETORNO** | Descrição textual do resultado da consulta BDRP. | string |
+    | **VEICULOSBDRP.RETORNO.EXISTE_ERRO** | Indica se houve erro no retorno (0 = Sem erro). | string |
+    | **VEICULOSBDRP.RETORNO.MSG_ERRO** | Mensagem de erro caso exista. | string |
+    | **VEICULOSBDRP.RETORNO.CHAVERETORNO** | Chave única de identificação do retorno. | string |
+    | **VEICULOSBDRP.RETORNO.SITUACAOVEICULO** | Situação atual do veículo (ex: CIRCULACAO). | string |
+    | **VEICULOSBDRP.RETORNO.PLACA** | Placa do veículo consultado. | string |
+    | **VEICULOSBDRP.RETORNO.MUNICIPIO** | Município e UF de registro do veículo. | string |
+    | **VEICULOSBDRP.RETORNO.UF** | UF de registro do veículo. | string |
+    | **VEICULOSBDRP.RETORNO.RENAVAM** | Número do RENAVAM do veículo. | string |
+    | **VEICULOSBDRP.RETORNO.CPF_CNPJ_PROPRIETARIO** | CPF ou CNPJ do proprietário atual. | string |
+    | **VEICULOSBDRP.RETORNO.TIPODOCUMENTOPROPRIETARIO** | Tipo de documento do proprietário (FISICA ou JURIDICA). | string |
+    | **VEICULOSBDRP.RETORNO.PRONOME** | CPF/CNPJ concatenado com o nome do proprietário atual. | string |
+    | **VEICULOSBDRP.RETORNO.LICDATA** | Data do licenciamento mais recente. | string |
+    | **VEICULOSBDRP.RETORNO.DATAEMISSAOCRV** | Data de emissão do CRV (Certificado de Registro do Veículo). | string |
+    | **VEICULOSBDRP.RETORNO.CHASSI** | Número do chassi do veículo. | string |
+    | **VEICULOSBDRP.RETORNO.TIPODOCUMENTOFATURADO** | Tipo de documento do faturado (FISICA ou JURIDICA). | string |
+    | **VEICULOSBDRP.RETORNO.CPFCNPJFATURADO** | CPF ou CNPJ do faturado (primeiro proprietário registrado). | string |
+    | **VEICULOSBDRP.RETORNO.UFFATURADO** | UF do faturado. | string |
+    | **VEICULOSBDRP.RETORNO.TIPODOCUMENTOIMPORTADORA** | Tipo de documento da importadora. | string |
+    | **VEICULOSBDRP.RETORNO.TIPOREMARCACAOCHASSI** | Tipo de remarcação do chassi. | string |
+    | **VEICULOSBDRP.RETORNO.MARCAMODELOCOMPLETO** | Marca e modelo completos do veículo. | string |
+    | **VEICULOSBDRP.RETORNO.MARCA** | Marca do veículo. | string |
+    | **VEICULOSBDRP.RETORNO.MODELO** | Modelo do veículo. | string |
+    | **VEICULOSBDRP.RETORNO.VEIANOFABR** | Ano de fabricação do veículo. | string |
+    | **VEICULOSBDRP.RETORNO.VEIANOMODELO** | Ano do modelo do veículo. | string |
+    | **VEICULOSBDRP.RETORNO.TIPO** | Tipo do veículo (ex: AUTOMOVEL). | string |
+    | **VEICULOSBDRP.RETORNO.CARROCERIA** | Tipo de carroceria do veículo. | string |
+    | **VEICULOSBDRP.RETORNO.COR** | Cor do veículo. | string |
+    | **VEICULOSBDRP.RETORNO.ESPECIE** | Espécie do veículo. | string |
+    | **VEICULOSBDRP.RETORNO.VEICATEGORIA** | Categoria do veículo (ex: PARTICULAR). | string |
+    | **VEICULOSBDRP.RETORNO.COMBUSTIVEL** | Tipo de combustível do veículo. | string |
+    | **VEICULOSBDRP.RETORNO.POTENCIA** | Potência do motor em cavalos. | string |
+    | **VEICULOSBDRP.RETORNO.CILINDRADA** | Cilindrada do motor. | string |
+    | **VEICULOSBDRP.RETORNO.CAPACIDADECARGA** | Capacidade de carga em kg. | string |
+    | **VEICULOSBDRP.RETORNO.CODIGOCATEGORIA** | Código interno da categoria do veículo. | string |
+    | **VEICULOSBDRP.RETORNO.CODIGOCOR** | Código interno da cor do veículo. | string |
+    | **VEICULOSBDRP.RETORNO.CODIGOMARCA** | Código interno da marca do veículo. | string |
+    | **VEICULOSBDRP.RETORNO.CODIGOTIPO** | Código interno do tipo do veículo. | string |
+    | **VEICULOSBDRP.RETORNO.VEIPROCEDENCIA** | Procedência do veículo (NACIONAL ou IMPORTADO). | string |
+    | **VEICULOSBDRP.RETORNO.CAPACIDADEPASSAG** | Capacidade de passageiros. | string |
+    | **VEICULOSBDRP.RETORNO.MOTOR** | Número do motor do veículo. | string |
+    | **VEICULOSBDRP.RETORNO.NUMERO_CAIXACAMBIO** | Número da caixa de câmbio. | string |
+    | **VEICULOSBDRP.RETORNO.NUMERO_CARROCERIA** | Número da carroceria. | string |
+    | **VEICULOSBDRP.RETORNO.NUMERO_EIXOTRASEIRODIF** | Número do eixo traseiro diferencial. | string |
+    | **VEICULOSBDRP.RETORNO.NUMERO_TERCEIROEIXO** | Número do terceiro eixo. | string |
+    | **VEICULOSBDRP.RETORNO.CMT** | Capacidade máxima de tração. | string |
+    | **VEICULOSBDRP.RETORNO.PBT** | Peso bruto total. | string |
+    | **VEICULOSBDRP.RETORNO.EIXOS** | Número de eixos do veículo. | string |
+    | **VEICULOSBDRP.RETORNO.TIPOTRANSACAO** | Tipo de transação registrada. | string |
+    | **VEICULOSBDRP.RETORNO.RESTRICAOFINAN** | Situação de restrição financeira do veículo. | string |
+    | **VEICULOSBDRP.RETORNO.RESTRICAONOMEAGENTE** | Nome do agente financeiro da restrição. | string |
+    | **VEICULOSBDRP.RETORNO.CGCFINANCEIRA** | CNPJ da financeira com restrição. | string |
+    | **VEICULOSBDRP.RETORNO.RESTRICAOARRENDATARIO** | Nome do arrendatário em caso de restrição. | string |
+    | **VEICULOSBDRP.RETORNO.RESTRICAODATAINCLUSAO** | Data de inclusão da restrição financeira. | string |
+    | **VEICULOSBDRP.RETORNO.NUMEROCONTRATOFINANCEIRA** | Número do contrato da financeira. | string |
+    | **VEICULOSBDRP.RETORNO.CODIGOAGENTEFINANCEIRO** | Código do agente financeiro. | string |
+    | **VEICULOSBDRP.RETORNO.DATAVIGENCIACONTRATOFINANCEIRA** | Data de vigência do contrato financeiro. | string |
+    | **VEICULOSBDRP.RETORNO.EXISTEDEBITODEIPVA** | Indica se há débito de IPVA. | string |
+    | **VEICULOSBDRP.RETORNO.EXISTEDEBITOMULTA** | Indica se há débito de multas. | string |
+    | **VEICULOSBDRP.RETORNO.DEBIPVA** | Valor do débito de IPVA. | string |
+    | **VEICULOSBDRP.RETORNO.EXISTEDEBITODELICENCIAMENTO** | Indica se há débito de licenciamento. | string |
+    | **VEICULOSBDRP.RETORNO.EXISTEDEBITODELICENCIAMENTOVL** | Valor do débito de licenciamento. | string |
+    | **VEICULOSBDRP.RETORNO.VALORTOTALDEBITOMULTA** | Valor total dos débitos de multa. | string |
+    | **VEICULOSBDRP.RETORNO.EXISTEDEBITODEDPVAT** | Indica se há débito de DPVAT. | string |
+    | **VEICULOSBDRP.RETORNO.DPVAT** | Valor do débito de DPVAT. | string |
+    | **VEICULOSBDRP.RETORNO.OUTRAS_RESTRICOES_01** | Primeira restrição adicional registrada. | string |
+    | **VEICULOSBDRP.RETORNO.OUTRAS_RESTRICOES_02** | Segunda restrição adicional registrada. | string |
+    | **VEICULOSBDRP.RETORNO.OUTRAS_RESTRICOES_03** | Terceira restrição adicional registrada. | string |
+    | **VEICULOSBDRP.RETORNO.OUTRAS_RESTRICOES_04** | Quarta restrição adicional registrada. | string |
+    | **VEICULOSBDRP.RETORNO.PRONOMEANTERIOR** | Nome do proprietário anterior ao atual. | string |
+    | **VEICULOSBDRP.RETORNO.RESTRICAOCPFCNPJARRENDATAR** | CPF/CNPJ do arrendatário com restrição. | string |
+    | **VEICULOSBDRP.RETORNO.INTENCAORESTRICAOFINAN** | Intenção de restrição financeira registrada. | string |
+    | **VEICULOSBDRP.RETORNO.INTENCAONOMEAGENTE** | Nome do agente da intenção de restrição. | string |
+    | **VEICULOSBDRP.RETORNO.INTENCAONOMEFINANC** | Nome da financeira da intenção de restrição. | string |
+    | **VEICULOSBDRP.RETORNO.INTENCAOCPFCNPJFINANC** | CPF/CNPJ da financeira da intenção de restrição. | string |
+    | **VEICULOSBDRP.RETORNO.INTENCAODATAINCLUSAO** | Data de inclusão da intenção de restrição. | string |
+    | **VEICULOSBDRP.RETORNO.DEBDERSA** | Débito com o DERSA. | string |
+    | **VEICULOSBDRP.RETORNO.DEBDER** | Débito com o DER. | string |
+    | **VEICULOSBDRP.RETORNO.DEBDETRAN** | Débito com o DETRAN. | string |
+    | **VEICULOSBDRP.RETORNO.DEBCETESB** | Débito com a CETESB. | string |
+    | **VEICULOSBDRP.RETORNO.DEBRENAINF** | Débito com o RENAINF. | string |
+    | **VEICULOSBDRP.RETORNO.DEBMUNICIPAIS** | Débitos municipais do veículo. | string |
+    | **VEICULOSBDRP.RETORNO.DEBPOLRODFED** | Débito com a Polícia Rodoviária Federal. | string |
+    | **VEICULOSBDRP.RETORNO.RESFURTO** | Restrição de furto ou roubo. | string |
+    | **VEICULOSBDRP.RETORNO.RESGUINCHO** | Restrição de guincho. | string |
+    | **VEICULOSBDRP.RETORNO.RESADMINISTRATIVA** | Restrição administrativa. | string |
+    | **VEICULOSBDRP.RETORNO.RESJUDICIAL** | Restrição judicial. | string |
+    | **VEICULOSBDRP.RETORNO.RESTRIBUTARIA** | Restrição tributária. | string |
+    | **VEICULOSBDRP.RETORNO.RESRENAJUD** | Restrição via RENAJUD. | string |
+    | **VEICULOSBDRP.RETORNO.RESAMBIENTAL** | Situação da inspeção veicular ambiental. | string |
+    | **VEICULOSBDRP.RETORNO.LICEXELIC** | Ano do último licenciamento. | string |
+    | **VEICULOSBDRP.RETORNO.CCOMUNICACAOVENDA** | Indica se há comunicação de venda ativa. | string |
+    | **VEICULOSBDRP.RETORNO.CCOMUNICINCLUSAO** | Data de inclusão da comunicação de venda. | string |
+    | **VEICULOSBDRP.RETORNO.TIPODOCCOMPRADOR** | Tipo de documento do comprador na comunicação de venda. | string |
+    | **VEICULOSBDRP.RETORNO.CPFCNPJCOMPRADOR** | CPF ou CNPJ do comprador na comunicação de venda. | string |
+    | **VEICULOSBDRP.RETORNO.DATAVENDA** | Data da venda registrada na comunicação. | string |
+    | **VEICULOSBDRP.RETORNO.NOTAFISCAL** | Número da nota fiscal da venda. | string |
+    | **VEICULOSBDRP.RETORNO.PROTOCOLODETRAN** | Protocolo do DETRAN referente à transação. | string |
+    | **VEICULOSBDRP.RETORNO.INSPECAOANO** | Ano da inspeção veicular. | string |
+    | **VEICULOSBDRP.RETORNO.INSPECAOCENTRO** | Centro de inspeção veicular. | string |
+    | **VEICULOSBDRP.RETORNO.INSPECAODATA** | Data da inspeção veicular. | string |
+    | **VEICULOSBDRP.RETORNO.INSPECAOSELO** | Número do selo da inspeção veicular. | string |
+    | **VEICULOSBDRP.RETORNO.INSPECAOSTATUS** | Status da inspeção veicular. | string |
+    | **VEICULOSBDRP.RETORNO.CODIGOFINANCEIRA** | Código da financeira. | string |
+    | **VEICULOSBDRP.RETORNO.DATAINCLUSAOINTENCAOTROCAFINANCEIRA** | Data de inclusão da intenção de troca de financeira. | string |
+    | **VEICULOSBDRP.RETORNO.DATALIMITERESTRICAOTRIBUTARIA** | Data limite da restrição tributária. | string |
+    | **VEICULOSBDRP.RETORNO.TEMPOEXECUCAO** | Tempo de execução da consulta em segundos. | string |
+    | **VEICULOSBDRP.RETORNO.REDUNDANCIA** | Indica a fonte do retorno (ORIGINAL ou REDUNDANTE). | string |
+    | **VEICULOSBDRP.RETORNO.HORA** | Timestamp da execução da consulta. | string |
+    | **VEICULOSBDRP.RETORNO.DATA** | Data da execução da consulta. | string |
+
+    </Accordion>
+
+    ## Lógica de Resposta (Vetor de Status)
+
+    <Tip>
+    O array `RESPOSTA.CODIGO` funciona como um **sumário de integridade posicional**: cada posição do array corresponde a uma integração, permitindo identificar rapidamente quais blocos retornaram dados válidos sem percorrer todo o JSON.
+    </Tip>
+
+    | Código | Descrição |
+    |--------|-----------|
+    | `1` | Bloco processado com sucesso e contém dados. |
+    | `2` | Bloco processado, mas não foram encontrados dados para o documento consultado. |
+    | `3` | Bloco processado, mas ocorreu um erro no retorno dos dados. |
+
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required: [Consulta]
+          properties:
+            Consulta:
+              type: object
+              required: [IdConsulta, Placa]
+              properties:
+                IdConsulta:
+                  type: string
+                  description: Identificador da consulta.
+                  example: "467"
+                Placa:
+                  type: string
+                  description: Placa do veículo no formato AAA0000 (antigo) ou AAA0A00 (Mercosul).
+                  example: "ABC1234"
+
+  responses:
+    '200':
+      description: |
+        Resposta da consulta:
+        * Código `1`: Sucesso.
+        * Código `2`: Dado não encontrado na base de dados.
+        * Código `3`: Erro na consulta.
+      content:
+        application/json:
+          schema:
+            $ref: '../openapi.yaml#/components/schemas/RespostaVeiculoTotal'
+          examples:
+            Veiculo Encontrado:
+              value:
+                CONSULTA:
+                  CODIGORESPOSTA: "100000001"
+                  DATAHORA: "01/01/2026 10:00:00"
+                  LOGON: "00000"
+                  IDCONSULTA: "467"
+                RESPOSTA:
+                  CODIGO:
+                    - "1"
+                    - "2"
+                    - "2"
+                    - "2"
+                    - "1"
+                    - "1"
+                    - "1"
+                    - "1"
+                  INDICIOSINISTROVEICULAR:
+                    DESCRICAORETORNO: "Sucesso"
+                    INDICIODESINISTRO: "0"
+                  RECALL:
+                    DESCRICAORETORNO: "NAO FOI POSSIVEL LOCALIZAR O VEICULO."
+                  HISTORICOROUBOFURTO:
+                    DESCRICAORETORNO: "O VEÍCULO NÃO FOI APRESENTADO NO HISTÓRICO DE ROUBO OU FURTO."
+                  LEILAOCONJUGADO:
+                    DESCRICAORETORNO: "O VEÍCULO NÃO FOI APRESENTADO NA BASE DE LEILÃO."
+                  HISTORICOPROPRIETARIO:
+                    DESCRICAORETORNO: "SUCESSO"
+                    REGISTRO_1:
+                      CHAVERETORNO: "010101010101010"
+                      OCORRENCIA: "1"
+                      UF_DUT: ""
+                      CODIGOMUNICIPIO: "NAO INFORMADO"
+                      MUNICIPIO: "NAO INFORMADO"
+                      ANO_EXERCICIO: "2024"
+                      PLACA: "ABC1234"
+                      RENAVAM: "00123456789"
+                      CHASSI: "9BWZZZ377VT004251"
+                      CGC_CPF: "12345678900"
+                      NOME_PROPRIETARIO: "JOAO SILVA SANTOS"
+                      TIPO_DOCUMENTO: "NAO INFORMADO"
+                      CORRECAO_CHASSI_RENAVAM: "NAO INFORMADO"
+                      DATA_PROCESSAMENTO: "2024"
+                      HORA_PROCESSAMENTO: "00:00"
+                      MOTIVO_TIPO_AUTORIZACAO: "NAO INFORMADO"
+                    REGISTRO_2:
+                      CHAVERETORNO: "010101010101010"
+                      OCORRENCIA: "2"
+                      UF_DUT: ""
+                      CODIGOMUNICIPIO: "NAO INFORMADO"
+                      MUNICIPIO: "NAO INFORMADO"
+                      ANO_EXERCICIO: "2015"
+                      PLACA: "ABC1234"
+                      RENAVAM: "00123456789"
+                      CHASSI: "9BWZZZ377VT004251"
+                      CGC_CPF: "98765432000110"
+                      NOME_PROPRIETARIO: "AUTOMOVEIS BRASIL LTDA"
+                      TIPO_DOCUMENTO: "NAO INFORMADO"
+                      CORRECAO_CHASSI_RENAVAM: "NAO INFORMADO"
+                      DATA_PROCESSAMENTO: "2015"
+                      HORA_PROCESSAMENTO: "00:00"
+                      MOTIVO_TIPO_AUTORIZACAO: "NAO INFORMADO"
+                  VEICULARBNACIONAL:
+                    REGISTRO_1:
+                      DATA_EMPLACAMENTO: "15-MAR-15"
+                      CHASSI: "9BWZZZ377VT004251"
+                      PLACA: "ABC1234"
+                      PLACA_MODELO_NOVO: "ABC1A34"
+                      RENAVAM: "00123456789"
+                      IDENTIFICACAO_FATURADO: "98765432000110"
+                      UF_DO_FATURADO: "SP"
+                      TIPO_PROPRIETARIO: "FISICA"
+                      UF: "SP"
+                      MUNICIPIO: "SAO PAULO"
+                      ANO_FABRICACAO: "2015"
+                      ANO_MODELO: "2016"
+                      MARCA: "VW"
+                      MODELO: "VW/GOL 1.0"
+                      TIPO_VEICULO: "AUTOMOVEL"
+                      ESPECIE_VEICULO: "PASSAGEIRO"
+                      CARROCERIA: "NAO APLICAVEL"
+                      NUMERO_CARROCERIA: ""
+                      COR: "PRATA"
+                      COMBUSTIVEL: "FLEX"
+                      POTENCIA: "76"
+                      CILINDRADA: "1000"
+                      NUMERO_LUGAR: ""
+                      QUANTIDADE_PASSAGEIRO: "5"
+                      CAPACIDADE_CARGA: "0"
+                      PESO_BRUTO_TOTAL: "0"
+                      CAPACIDADE_MAXIMA_TRACAO: "0"
+                      PROCEDENCIA_VEICULO: ""
+                      SITUACAO_CHASSI: "N"
+                      NUMERO_CAIXA_CAMBIO: "000100200"
+                      NUMERO_EIXO: "0"
+                      NUMERO_EIXO_TRASEIRO_DIFERENCIAL: ""
+                      NUMERO_TERCEIRO_EIXO: ""
+                      NUMERO_MOTOR: "BX0001234"
+                      TIPO_MONTAGEM: "COMPLETA"
+                      TIPO_DOCUMENTO_IMPORTADORA: "OUTROS"
+                      IDENTIFICACAO_IMPORTADORA: ""
+                      NUMERO_DI: "0"
+                      DATA_REGISTRO_DI: ""
+                      UNIDADE_LOCAL_SRF: "0"
+                      ULTIMA_ATUALIZACAO: "10-JAN-20"
+                      RESTRICAO1: "SEM RESTRICAO"
+                      RESTRICAO2: "SEM RESTRICAO"
+                      RESTRICAO3: "SEM RESTRICAO"
+                      RESTRICAO4: "SEM RESTRICAO"
+                      DATA_LIMITE_RESTRICAO: ""
+                      SITUACAO_VEICULO: "EM CIRCULACAO"
+                      NACIONALIDADE: "NACIONAL"
+                  PRECIFICADORFIPE:
+                    DESCRICAORETORNO: "SUCESSO"
+                    REGISTRO_1:
+                      STATUS: "1"
+                      CHASSI: "9BWZZZ377VT004251"
+                      CODIGOFIPE: "005843-1"
+                      FABRICANTEFIPE: "VW - VOLKSWAGEN"
+                      MODELOFIPE: "GOL 1.0 FLEX 4P"
+                      ANOMODELOFIPE: "16"
+                      COMBUSTIVELFIPE: "F"
+                      PRECOFIPE: "32.500,00"
+                      PRECOMEDIO: "32.500,00"
+                      VIGENCIA: "06/2026"
+                  VEICULOSBDRP:
+                    DESCRICAORETORNO: "SUCESSO"
+                    RETORNO:
+                      EXISTE_ERRO: "0"
+                      MSG_ERRO: ""
+                      CHAVERETORNO: "010101020202020"
+                      SITUACAOVEICULO: "CIRCULACAO"
+                      PLACA: "ABC1234"
+                      MUNICIPIO: "SAO PAULO-SP"
+                      UF: "SP"
+                      RENAVAM: "00123456789"
+                      CPF_CNPJ_PROPRIETARIO: "12345678900"
+                      TIPODOCUMENTOPROPRIETARIO: "FISICA"
+                      PRONOME: "12345678900 JOAO SILVA SANTOS"
+                      LICDATA: "20/05/2025"
+                      DATAEMISSAOCRV: "15/03/2015"
+                      CHASSI: "9BWZZZ377VT004251"
+                      TIPODOCUMENTOFATURADO: "JURIDICA"
+                      CPFCNPJFATURADO: "98765432000110"
+                      UFFATURADO: "SP"
+                      TIPODOCUMENTOIMPORTADORA: ""
+                      TIPOREMARCACAOCHASSI: "NORMAL"
+                      MARCAMODELOCOMPLETO: "VW/GOL 1.0"
+                      MARCA: "VOLKSWAGEN"
+                      MODELO: "GOL 1.0"
+                      VEIANOFABR: "2015"
+                      VEIANOMODELO: "2016"
+                      TIPO: "AUTOMOVEL"
+                      CARROCERIA: "INEXISTENTE"
+                      COR: "PRATA"
+                      ESPECIE: "PASSAGEIRO"
+                      VEICATEGORIA: "PARTICULAR"
+                      COMBUSTIVEL: "FLEX"
+                      POTENCIA: "76"
+                      CILINDRADA: "1000"
+                      CAPACIDADECARGA: "0"
+                      CODIGOCATEGORIA: "1"
+                      CODIGOCOR: "5"
+                      CODIGOMARCA: "595959"
+                      CODIGOTIPO: "6"
+                      VEIPROCEDENCIA: "NACIONAL"
+                      CAPACIDADEPASSAG: "5"
+                      MOTOR: "BX0001234"
+                      NUMERO_CAIXACAMBIO: "000100200"
+                      NUMERO_CARROCERIA: ""
+                      NUMERO_EIXOTRASEIRODIF: ""
+                      NUMERO_TERCEIROEIXO: ""
+                      CMT: "0"
+                      PBT: "0"
+                      EIXOS: "0"
+                      TIPOTRANSACAO: ""
+                      RESTRICAOFINAN: "NADA CONSTA"
+                      RESTRICAONOMEAGENTE: ""
+                      CGCFINANCEIRA: ""
+                      RESTRICAOARRENDATARIO: ""
+                      RESTRICAODATAINCLUSAO: ""
+                      NUMEROCONTRATOFINANCEIRA: ""
+                      CODIGOAGENTEFINANCEIRO: ""
+                      DATAVIGENCIACONTRATOFINANCEIRA: ""
+                      EXISTEDEBITODEIPVA: "NAO EXISTE DEBITO DE IPVA"
+                      EXISTEDEBITOMULTA: "NAO EXISTE DEBITO DE MULTA"
+                      DEBIPVA: "0,00"
+                      EXISTEDEBITODELICENCIAMENTO: "NAO EXISTE DEBITO DE LICENCIAMENTO"
+                      EXISTEDEBITODELICENCIAMENTOVL: "0,00"
+                      VALORTOTALDEBITOMULTA: "0,00"
+                      EXISTEDEBITODEDPVAT: "NAO EXISTE DEBITO DE DPVAT"
+                      DPVAT: "0,00"
+                      OUTRAS_RESTRICOES_01: "NADA CONSTA"
+                      OUTRAS_RESTRICOES_02: "NADA CONSTA"
+                      OUTRAS_RESTRICOES_03: "NADA CONSTA"
+                      OUTRAS_RESTRICOES_04: "NADA CONSTA"
+                      PRONOMEANTERIOR: "AUTOMOVEIS BRASIL LTDA"
+                      RESTRICAOCPFCNPJARRENDATAR: ""
+                      INTENCAORESTRICAOFINAN: ""
+                      INTENCAONOMEAGENTE: ""
+                      INTENCAONOMEFINANC: ""
+                      INTENCAOCPFCNPJFINANC: ""
+                      INTENCAODATAINCLUSAO: ""
+                      DEBDERSA: "0,00"
+                      DEBDER: "0,00"
+                      DEBDETRAN: "0,00"
+                      DEBCETESB: "0,00"
+                      DEBRENAINF: "0,00"
+                      DEBMUNICIPAIS: "0,00"
+                      DEBPOLRODFED: "0,00"
+                      RESFURTO: "NADA CONSTA"
+                      RESGUINCHO: "NADA CONSTA"
+                      RESADMINISTRATIVA: "NADA CONSTA"
+                      RESJUDICIAL: "NADA CONSTA"
+                      RESTRIBUTARIA: "NADA CONSTA"
+                      RESRENAJUD: "NADA CONSTA"
+                      RESAMBIENTAL: "VEICULO COM INSPECAO VEICULAR OK"
+                      LICEXELIC: "2025"
+                      CCOMUNICACAOVENDA: "NAO CONSTA COMUNICACAO DE VENDAS"
+                      CCOMUNICINCLUSAO: ""
+                      TIPODOCCOMPRADOR: ""
+                      CPFCNPJCOMPRADOR: ""
+                      DATAVENDA: ""
+                      NOTAFISCAL: ""
+                      PROTOCOLODETRAN: ""
+                      INSPECAOANO: ""
+                      INSPECAOCENTRO: ""
+                      INSPECAODATA: ""
+                      INSPECAOSELO: ""
+                      INSPECAOSTATUS: ""
+                      CODIGOFINANCEIRA: ""
+                      DATAINCLUSAOINTENCAOTROCAFINANCEIRA: ""
+                      DATALIMITERESTRICAOTRIBUTARIA: ""
+                      TEMPOEXECUCAO: "1"
+                      REDUNDANCIA: "ORIGINAL"
+                      HORA: "1000000000"
+                      DATA: "01/01/2026"
+            Veiculo Nao Encontrado:
+              value:
+                CONSULTA:
+                  CODIGORESPOSTA: "*********"
+                  DATAHORA: "01/01/2026 10:00:00"
+                  LOGON: "*****"
+                  IDCONSULTA: "467"
+                RESPOSTA:
+                  CODIGO:
+                    - "2"
+                  DADOS:
+                    MSG: "Dado não encontrado na base de dados."
+    '400':
+      description: Requisição inválida — verifique o body enviado.
+    '401':
+      description: Token inválido ou expirado. Renove o token JWT via `/auth`.

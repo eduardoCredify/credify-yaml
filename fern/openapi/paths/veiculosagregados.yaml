@@ -1,0 +1,15 @@
+post:
+  tags: [Consulta Veicular]
+  summary: Veículos Agregados
+  description: Retorna todos os veículos vinculados a um CPF ou CNPJ.
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../openapi.yaml#/components/schemas/CpfCnpjRequest'
+  responses:
+    '200':
+      description: Sucesso
+    '401':
+      description: Token inválido ou expirado

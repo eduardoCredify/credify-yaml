@@ -1,0 +1,15 @@
+post:
+  tags: [Consulta Veicular]
+  summary: Veículo por Documento
+  description: Retorna dados do veículo a partir de um CPF ou CNPJ do proprietário.
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../openapi.yaml#/components/schemas/CpfCnpjRequest'
+  responses:
+    '200':
+      description: Sucesso
+    '401':
+      description: Token inválido ou expirado

@@ -1,0 +1,89 @@
+---
+title: Credify API
+description: Documentação oficial da API Credify
+---
+
+## Bem-vindo à Credify API
+
+A **Credify** oferece acesso a múltiplas bases de dados públicas e regulatórias brasileiras em uma única plataforma. Integre consultas veiculares, cadastrais, financeiras e muito mais com simplicidade e segurança.
+
+<CardGroup cols={3}>
+  <Card
+    title="Autenticação"
+    icon="fa-solid fa-lock"
+  >
+    Obtenha seu token JWT para autenticar suas requisições. Válido por 24 horas.
+  </Card>
+  <Card
+    title="Veículos e Mobilidade"
+    icon="fa-solid fa-car"
+    href="https://credify.docs.buildwithfern.com/api-reference/api-reference/2-veiculos-e-mobilidade/visao-geral"
+  >
+    Consultas veiculares completas: histórico, débitos, FIPE, roubo/furto e muito mais.
+  </Card>
+  <Card
+    title="Pessoas e Cadastral"
+    icon="fa-solid fa-user"
+  >
+    Dados cadastrais, histórico e validação de pessoas físicas e jurídicas.
+  </Card>
+  <Card
+    title="Empresas e CNPJ"
+    icon="fa-solid fa-building"
+  >
+    Informações completas sobre empresas, sócios e situação cadastral.
+  </Card>
+  <Card
+    title="Crédito e Score"
+    icon="fa-solid fa-chart-line"
+  >
+    Análise de crédito, score, negativações e histórico financeiro.
+  </Card>
+  <Card
+    title="KYC e BGC"
+    icon="fa-solid fa-shield-halved"
+  >
+    Know Your Customer e Background Check para validação e compliance de pessoas e empresas.
+  </Card>
+</CardGroup>
+
+---
+
+## Começando
+
+<Steps>
+  ### Obtenha suas credenciais
+  Entre em contato com a equipe da Credify para receber suas credenciais de acesso à API.
+
+  ### Gere o token de acesso
+  Utilize suas credenciais para gerar o token JWT. O token é válido por **24 horas**.
+
+  ```bash
+  curl -X POST https://api.credify.com.br/auth \
+    -H "Content-Type: application/json" \
+    -d '{ "clientId": "SEU_CLIENT_ID", "clientSecret": "SEU_SECRET" }'
+  ```
+
+  ### Faça sua primeira consulta
+  Inclua o token no header `Authorization` de todas as requisições:
+
+  ```bash
+  curl -X POST https://api.credify.com.br/veiculototal \
+    -H "Authorization: Bearer SEU_TOKEN" \
+    -H "Content-Type: application/json" \
+    -d '{ "Consulta": { "IdConsulta": "1", "Placa": "ABC1234" } }'
+  ```
+</Steps>
+
+---
+
+## Precisa de ajuda?
+
+<CardGroup cols={2}>
+  <Card title="Fale pelo WhatsApp" icon="fa-brands fa-whatsapp" href="https://wa.me/5511939502397">
+    Atendimento rápido com nossa equipe de suporte técnico.
+  </Card>
+  <Card title="Blog Credify" icon="fa-solid fa-newspaper" href="https://blog.credify.com.br">
+    Novidades, tutoriais e casos de uso da plataforma Credify.
+  </Card>
+</CardGroup>

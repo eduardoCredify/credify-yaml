@@ -1,0 +1,15 @@
+post:
+  tags: [Consulta Veicular]
+  summary: Débitos, Restrições e Proprietários
+  description: Retorna débitos pendentes, restrições e dados de proprietários do veículo.
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../openapi.yaml#/components/schemas/PlacaRequest'
+  responses:
+    '200':
+      description: Sucesso
+    '401':
+      description: Token inválido ou expirado

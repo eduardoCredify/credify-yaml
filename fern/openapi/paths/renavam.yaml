@@ -1,0 +1,15 @@
+post:
+  tags: [Consulta Veicular]
+  summary: Renavam
+  description: Retorna dados do veículo a partir do número do RENAVAM.
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../openapi.yaml#/components/schemas/RenavamRequest'
+  responses:
+    '200':
+      description: Sucesso
+    '401':
+      description: Token inválido ou expirado

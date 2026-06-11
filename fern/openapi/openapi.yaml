@@ -1,0 +1,263 @@
+openapi: 3.1.0
+info:
+  title: Credify API
+  version: 1.1.0
+  description: >
+    Documentação da API Credify. Autentique-se com ClientID e ClientSecret para
+    obter o token JWT (válido 24h) e utilize nas demais requisições.
+  contact:
+    name: Credify
+    url: https://credify.com.br
+
+servers:
+  - url: https://api.credify.com.br
+    description: Produção
+
+security:
+  - BearerAuth: []
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+
+    PlacaRequest:
+      type: object
+      required: [placa]
+      properties:
+        placa:
+          type: string
+          example: "ABC1234"
+
+    CpfCnpjRequest:
+      type: object
+      properties:
+        cpf:
+          type: string
+          example: "000.000.000-00"
+        cnpj:
+          type: string
+          example: "00.000.000/0001-00"
+
+    CnpjRequest:
+      type: object
+      required: [cnpj]
+      properties:
+        cnpj:
+          type: string
+          example: "00.000.000/0001-00"
+
+    RenavamRequest:
+      type: object
+      required: [renavam]
+      properties:
+        renavam:
+          type: string
+          example: "00000000000"
+
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Unauthorized"
+        code:
+          type: integer
+          example: 401
+
+    MensagemRetorno:
+      type: object
+      properties:
+        MSG:
+          type: string
+
+    IndiciSinistro:
+      type: object
+      properties:
+        DESCRICAORETORNO: { type: string }
+        INDICIODESINISTRO: { type: string }
+
+    DescricaoSimples:
+      type: object
+      properties:
+        DESCRICAORETORNO: { type: string }
+
+    RegistroProprietario:
+      type: object
+      properties:
+        CHAVERETORNO: { type: string }
+        OCORRENCIA: { type: string }
+        UF_DUT: { type: string }
+        CODIGOMUNICIPIO: { type: string }
+        MUNICIPIO: { type: string }
+        ANO_EXERCICIO: { type: string }
+        PLACA: { type: string }
+        RENAVAM: { type: string }
+        CHASSI: { type: string }
+        CGC_CPF: { type: string }
+        NOME_PROPRIETARIO: { type: string }
+        TIPO_DOCUMENTO: { type: string }
+        CORRECAO_CHASSI_RENAVAM: { type: string }
+        DATA_PROCESSAMENTO: { type: string }
+        HORA_PROCESSAMENTO: { type: string }
+        MOTIVO_TIPO_AUTORIZACAO: { type: string }
+
+    HistoricoProprietario:
+      type: object
+      properties:
+        DESCRICAORETORNO: { type: string }
+        REGISTRO_1:
+          $ref: '#/components/schemas/RegistroProprietario'
+        REGISTRO_2:
+          $ref: '#/components/schemas/RegistroProprietario'
+        REGISTRO_3:
+          $ref: '#/components/schemas/RegistroProprietario'
+
+    VeicularBNacional:
+      type: object
+      properties:
+        REGISTRO_1:
+          type: object
+          properties:
+            DATA_EMPLACAMENTO: { type: string }
+            CHASSI: { type: string }
+            PLACA: { type: string }
+            PLACA_MODELO_NOVO: { type: string }
+            RENAVAM: { type: string }
+            IDENTIFICACAO_FATURADO: { type: string }
+            UF_DO_FATURADO: { type: string }
+            TIPO_PROPRIETARIO: { type: string }
+            UF: { type: string }
+            MUNICIPIO: { type: string }
+            ANO_FABRICACAO: { type: string }
+            ANO_MODELO: { type: string }
+            MARCA: { type: string }
+            MODELO: { type: string }
+            TIPO_VEICULO: { type: string }
+            ESPECIE_VEICULO: { type: string }
+            COR: { type: string }
+            COMBUSTIVEL: { type: string }
+            POTENCIA: { type: string }
+            CILINDRADA: { type: string }
+            QUANTIDADE_PASSAGEIRO: { type: string }
+            SITUACAO_VEICULO: { type: string }
+            NACIONALIDADE: { type: string }
+            RESTRICAO1: { type: string }
+            RESTRICAO2: { type: string }
+            RESTRICAO3: { type: string }
+            RESTRICAO4: { type: string }
+
+    PrecificadorFipe:
+      type: object
+      properties:
+        DESCRICAORETORNO: { type: string }
+        REGISTRO_1:
+          type: object
+          properties:
+            STATUS: { type: string }
+            CHASSI: { type: string }
+            CODIGOFIPE: { type: string }
+            FABRICANTEFIPE: { type: string }
+            MODELOFIPE: { type: string }
+            ANOMODELOFIPE: { type: string }
+            COMBUSTIVELFIPE: { type: string }
+            PRECOFIPE: { type: string }
+            PRECOMEDIO: { type: string }
+            VIGENCIA: { type: string }
+
+    VeiculosBDRP:
+      type: object
+      properties:
+        DESCRICAORETORNO: { type: string }
+        RETORNO:
+          type: object
+          properties:
+            SITUACAOVEICULO: { type: string }
+            PLACA: { type: string }
+            MUNICIPIO: { type: string }
+            UF: { type: string }
+            RENAVAM: { type: string }
+            CPF_CNPJ_PROPRIETARIO: { type: string }
+            PRONOME: { type: string }
+            CHASSI: { type: string }
+            MARCAMODELOCOMPLETO: { type: string }
+            VEIANOFABR: { type: string }
+            VEIANOMODELO: { type: string }
+            COR: { type: string }
+            COMBUSTIVEL: { type: string }
+            RESTRICAOFINAN: { type: string }
+            EXISTEDEBITODEIPVA: { type: string }
+            EXISTEDEBITOMULTA: { type: string }
+            EXISTEDEBITODELICENCIAMENTO: { type: string }
+            RESFURTO: { type: string }
+            RESJUDICIAL: { type: string }
+
+    RespostaVeiculoTotal:
+      type: object
+      properties:
+        CONSULTA:
+          type: object
+          properties:
+            CODIGORESPOSTA: { type: string }
+            DATAHORA: { type: string }
+            LOGON: { type: string }
+            IDCONSULTA: { type: string }
+        RESPOSTA:
+          type: object
+          properties:
+            CODIGO:
+              type: array
+              items: { type: string }
+            INDICIOSINISTROVEICULAR:
+              $ref: '#/components/schemas/IndiciSinistro'
+            RECALL:
+              $ref: '#/components/schemas/DescricaoSimples'
+            HISTORICOROUBOFURTO:
+              $ref: '#/components/schemas/DescricaoSimples'
+            LEILAOCONJUGADO:
+              $ref: '#/components/schemas/DescricaoSimples'
+            HISTORICOPROPRIETARIO:
+              $ref: '#/components/schemas/HistoricoProprietario'
+            VEICULARBNACIONAL:
+              $ref: '#/components/schemas/VeicularBNacional'
+            PRECIFICADORFIPE:
+              $ref: '#/components/schemas/PrecificadorFipe'
+            VEICULOSBDRP:
+              $ref: '#/components/schemas/VeiculosBDRP'
+            DADOS:
+              $ref: '#/components/schemas/MensagemRetorno'
+
+# ─────────────────────────────────────────────
+# PATHS — um $ref por endpoint
+# ─────────────────────────────────────────────
+paths:
+
+  # 2.1 Consulta Veicular
+  /veiculototal:
+    $ref: './paths/veiculototal.yaml'
+  /veiculosagregados:
+    $ref: './paths/veiculosagregados.yaml'
+  /veiculodocumento:
+    $ref: './paths/veiculodocumento.yaml'
+  /veiculodocumentofrota:
+    $ref: './paths/veiculodocumentofrota.yaml'
+  /veiculoproprietarioplaca:
+    $ref: './paths/veiculoproprietarioplaca.yaml'
+  /veiculoproprietarioplacahistorico:
+    $ref: './paths/veiculoproprietarioplacahistorico.yaml'
+  /historicoproprietario:
+    $ref: './paths/historicoproprietario.yaml'
+  /historicoroubofurto:
+    $ref: './paths/historicoroubofurto.yaml'
+  /debitosrestricoesproprietarios:
+    $ref: './paths/debitosrestricoesproprietarios.yaml'
+  /veicularbnacionalonline:
+    $ref: './paths/veicularbnacionalonline.yaml'
+  /renavam:
+    $ref: './paths/renavam.yaml'
+  /renavamonline:
+    $ref: './paths/renavamonline.yaml'

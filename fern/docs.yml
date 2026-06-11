@@ -1,0 +1,114 @@
+# ─────────────────────────────────────────────────────────────
+# docs.yml — configuração do site de documentação Credify no Fern
+# ─────────────────────────────────────────────────────────────
+
+# Endereço do site publicado (ajuste se usar domínio próprio)
+instances:
+  - url: credify.docs.buildwithfern.com
+
+title: Credify API
+
+announcement:
+  message: "🚀 Novo endpoint disponível: Veicular BNacional Online — consulte agora na seção Veículos e Mobilidade."
+
+navbar-links:
+  - type: minimal
+    text: Site
+    href: https://www.credify.com.br
+  - type: filled
+    text: App Credify
+    href: https://app.credify.com.br/login
+
+metadata:
+  og:site_name: Credify API
+  og:title: "Credify API — Documentação"
+  og:description: "Acesse múltiplas bases de dados brasileiras em uma única plataforma: veículos, pessoas, empresas, crédito e muito mais."
+  og:image: "https://credify.com.br/og-image.png"
+  og:image:width: 1200
+  og:image:height: 630
+  twitter:card: summary_large_image
+
+footer-links:
+  website: https://www.credify.com.br
+  linkedin: https://br.linkedin.com/company/credify-brasil
+  instagram: https://www.instagram.com/credify.brasil/
+  youtube: https://www.youtube.com/@credifyoficial
+
+logo:
+  light: ./assets/logo.webp
+  dark: ./assets/logo.webp
+  height: 30
+  href: https://credify.com.br
+
+favicon: ./assets/logo.webp
+
+# ─────────────────────────────────────────────
+# TABS — abas no topo da navegação
+# ─────────────────────────────────────────────
+tabs:
+  home:
+    display-name: Início
+    icon: fa-solid fa-house
+  api:
+    display-name: API Reference
+    icon: fa-solid fa-code
+
+# ─────────────────────────────────────────────
+# NAVEGAÇÃO — hierarquia de 3 níveis:
+#   section (pasta) > section (subpasta) > endpoint
+# ─────────────────────────────────────────────
+navigation:
+  - tab: home
+    layout:
+      - page: Início
+        path: ./pages/index.mdx
+
+  - tab: api
+    layout:
+      - api: API Reference
+        layout:
+
+          - section: "2. Veículos e Mobilidade"
+            contents:
+              - page: Visão Geral
+                path: ./pages/veiculos-mobilidade.mdx
+              - section: "2.1 Consulta Veicular"
+                contents:
+                  - POST /veiculototal
+                  - POST /veiculosagregados
+                  - POST /veiculodocumento
+                  - POST /veiculodocumentofrota
+                  - POST /veiculoproprietarioplaca
+                  - POST /veiculoproprietarioplacahistorico
+                  - POST /historicoproprietario
+                  - POST /historicoroubofurto
+                  - POST /debitosrestricoesproprietarios
+                  - POST /veicularbnacionalonline
+                  - POST /renavam
+                  - POST /renavamonline
+
+# ─────────────────────────────────────────────
+# VISUAL (ajuste à vontade)
+# ─────────────────────────────────────────────
+colors:
+  accent-primary:
+    light: "#E11D2A"
+    dark: "#CF0E22"
+  background:
+    light: "#FFFFFF"
+    dark: "#0A0102"
+  sidebar-background:
+    light: "#FFFFFF"
+    dark: "#0A0102"
+  header-background:
+    light: "#FFFFFF"
+    dark: "#0A0102"
+
+layout:
+  page-width: full
+  searchbar-placement: header
+
+# ─────────────────────────────────────────────
+# IA — Ask Fern (chatbot) + MCP server
+# ─────────────────────────────────────────────
+ai-search: {}            # liga o Ask Fern (chatbot com IA + RAG)

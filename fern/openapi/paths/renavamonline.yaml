@@ -1,0 +1,15 @@
+post:
+  tags: [Consulta Veicular]
+  summary: Renavam Online
+  description: Consulta online ao RENAVAM para obter dados atualizados do veículo em tempo real.
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../openapi.yaml#/components/schemas/RenavamRequest'
+  responses:
+    '200':
+      description: Sucesso
+    '401':
+      description: Token inválido ou expirado
