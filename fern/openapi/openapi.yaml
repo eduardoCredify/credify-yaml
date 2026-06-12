@@ -25,6 +25,54 @@ components:
 
   schemas:
 
+    AuthRequest:
+      type: object
+      required: [ClientID, ClientSecret]
+      properties:
+        ClientID:
+          type: string
+          description: Identificador da credencial de acesso, fornecido pela Credify.
+          example: "seu-client-id"
+        ClientSecret:
+          type: string
+          description: Chave secreta associada ao ClientID.
+          example: "seu-client-secret"
+
+    AuthResponse:
+      type: object
+      properties:
+        Success:
+          type: boolean
+          description: Indica se a autenticação foi bem-sucedida.
+          example: true
+        Message:
+          type: string
+          description: Mensagem descritiva do resultado da autenticação.
+          example: "Token Gerado com sucesso, válido por 24 horas."
+        Dados:
+          type: string
+          description: Token JWT (válido por 24h) a ser enviado no header Authorization.
+          example: "eyJhbGciOiAiYFMyNTYiLCJ0eXAiOiAiSldUIn0.eyAicm9sZSIgOiAidXNlciIsImxvZ2luIiA6ICIyODc3OCIsIm5iZiI6MTcxNTgzMzM0MSwiZXhwIjoxNzE1OTE5NzQxLCJpYXQiOjE3MTU4MzMzNDEgfQ.8lpNMnGAHrLE7homqtZ5UeByZOjsl7cnWuq9UTE7zIM"
+
+    AuthErrorResponse:
+      type: object
+      description: >-
+        Resposta de erro da autenticação. Atenção: a API usa a chave `Sucess`
+        (grafia da própria API) nesta resposta, diferente de `Success` no sucesso.
+      properties:
+        Sucess:
+          type: boolean
+          description: Sempre false em caso de falha de autenticação.
+          example: false
+        Message:
+          type: string
+          description: Mensagem descritiva do erro.
+          example: "LOGON OU SENHA INVALIDOS"
+        Dados:
+          type: boolean
+          description: Retorna false quando a autenticação falha.
+          example: false
+
     PlacaRequest:
       type: object
       required: [placa]
@@ -235,6 +283,10 @@ components:
 # PATHS — um $ref por endpoint
 # ─────────────────────────────────────────────
 paths:
+
+  # 1. Autenticação
+  /auth:
+    $ref: './paths/auth.yaml'
 
   # 2.1 Consulta Veicular
   /veiculototal:

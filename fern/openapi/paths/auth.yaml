@@ -1,0 +1,68 @@
+post:
+  operationId: autenticar
+  tags: [Autenticacao]
+  summary: Auth
+  # O /auth é público: é justamente como o token é obtido. Sobrescreve o
+  # security global (BearerAuth) para não exigir token nesta chamada.
+  security: []
+  description: |
+    A **Autenticação** é o primeiro passo para usar a API Credify. Envie suas
+    credenciais de acesso (**ClientID** e **ClientSecret**) e receba um **token
+    JWT** que autoriza todas as demais requisições.
+
+    <Note>
+    O token é válido por **24 horas** e é retornado no campo `Dados`. Gere um
+    novo token antes de expirar e **reutilize o mesmo token** durante esse
+    período — não autentique a cada chamada.
+    </Note>
+
+    ## Como usar o token
+
+    Pegue o token retornado em `Dados` e inclua-o no header `Authorization` de
+    todas as consultas, no formato `Bearer`:
+
+    ```bash
+    Authorization: Bearer SEU_TOKEN_JWT
+    ```
+
+    ## TABELA DE CAMPOS DE REQUISIÇÃO
+
+    | **Campo** | **Descrição** | **Formato** | **Obrigatório** |
+    |-----------|---------------|-------------|-----------------|
+    | **ClientID** | Identificador da sua credencial de acesso, fornecido pela Credify. | string | Sim |
+    | **ClientSecret** | Chave secreta associada ao ClientID. Mantenha em segredo. | string | Sim |
+
+    ## CAMPOS DE RESPOSTA
+
+    | **Campo** | **Descrição** | **Formato** |
+    |:----------|:--------------|:------------|
+    | **Success** | Indica se a autenticação foi bem-sucedida (`true`/`false`). | boolean |
+    | **Message** | Mensagem descritiva do resultado da autenticação. | string |
+    | **Dados** | Em caso de sucesso, contém o **token JWT** (válido por 24h). Em caso de erro, retorna `false`. | string |
+
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../openapi.yaml#/components/schemas/AuthRequest'
+
+  responses:
+    '200':
+      description: Autenticação bem-sucedida. O token JWT é retornado no campo `Dados`.
+      content:
+        application/json:
+          schema:
+            $ref: '../openapi.yaml#/components/schemas/AuthResponse'
+    '400':
+      description: Requisição inválida — verifique o body enviado.
+    '401':
+      description: |
+        Credenciais inválidas — confira o ClientID e o ClientSecret.
+
+        Observação: nesta resposta de erro a API retorna a chave `Sucess`
+        (grafia da API), diferente de `Success` usada no sucesso.
+      content:
+        application/json:
+          schema:
+            $ref: '../openapi.yaml#/components/schemas/AuthErrorResponse'

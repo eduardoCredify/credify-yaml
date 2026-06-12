@@ -1,4 +1,4 @@
-openapi: 3.1.0
+﻿openapi: 3.1.0
 info:
   title: Credify API
   version: 1.1.0
@@ -15,6 +15,48 @@ servers:
 
 security:
   - BearerAuth: []
+
+x-tagGroups:
+  - name: "1. Autenticacao e Integracao Tecnica"
+    tags:
+      - Autenticacao e Integracao Tecnica
+  - name: "2. Veículos e Mobilidade"
+    tags:
+      - Consulta Veicular
+      - Restricoes e Gravames
+      - Risco e Sinistro
+  - name: "3. CNH e Condutores"
+    tags:
+      - CNH e Condutores
+  - name: "4. Cadastral Pessoa Física"
+    tags:
+      - Enriquecimento PF
+      - Receita Federal PF
+      - Scores PF
+  - name: "5. Cadastral Pessoa Jurídica"
+    tags:
+      - Enriquecimento PJ
+      - Receita Federal PJ
+      - Quadro Societario
+      - Indicadores PJ
+  - name: "6. Jurídico, Processos e Restrições"
+    tags:
+      - Relatorio Juridico
+      - Restricoes e Apontamentos
+  - name: "7. KYC, Compliance e Background Check"
+    tags:
+      - Produtos KYC
+      - Exposicao Publica
+      - Background Check
+  - name: "8. Antifraude, Validações e Autenticação de Dados"
+    tags:
+      - Validacao Cadastral
+      - Cartao e BIN
+      - Biometria Facial
+      - Documentoscopia
+  - name: "9. Marketing e Leads"
+    tags:
+      - Marketing e Leads
 
 components:
   securitySchemes:
@@ -304,12 +346,12 @@ components:
 paths:
 
   # ─────────────────────────────────────────────
-  # AUTH
+  # 1. Autenticacao e Integracao Tecnica
   # ─────────────────────────────────────────────
 
   /auth:
     post:
-      tags: [Auth]
+      tags: [Autenticacao e Integracao Tecnica]
       summary: Autenticação
       description: >
         Gera um token JWT válido por 24 horas. Use o ClientID e ClientSecret
@@ -338,35 +380,55 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
-  # ─────────────────────────────────────────────
-  # VEICULARES - SERVIÇOS
-  # ─────────────────────────────────────────────
-
-  /ecrlv:
+  /sso:
     post:
-      tags: [Veiculares - Serviços]
-      summary: ECRLV
-      description: Extrato do CRLV digital. Suporta primeira e segunda requisição.
+      tags: [Autenticacao e Integracao Tecnica]
+      summary: SSO
+      description: Autenticação via Single Sign-On.
+      security: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PlacaRequest'
+              type: object
+              properties:
+                token_sso:
+                  type: string
+                  example: "sso-token-aqui"
       responses:
         '200':
           description: Sucesso
-        '401':
-          description: Não autorizado
+
+  /webhook:
+    post:
+      tags: [Autenticacao e Integracao Tecnica]
+      summary: Webhook (Decisionfy)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                url:
+                  type: string
+                  example: "https://seudominio.com/webhook"
+                evento:
+                  type: string
+                  example: "consulta.finalizada"
+      responses:
+        '200':
+          description: Sucesso
 
   # ─────────────────────────────────────────────
-  # VEICULARES
+  # Consulta Veicular
   # ─────────────────────────────────────────────
 
   /veiculototal:
     post:
-      tags: [Veiculares]
-      summary: Consulta completa de dados veiculares
+      tags: [Consulta Veicular]
+      summary: Veículo Total
       description: |
         Retorna informações completas sobre um veículo a partir da placa, incluindo dados cadastrais, histórico de proprietários, situação de roubo/furto, leilão, recall, indício de sinistro e precificação FIPE.
 
@@ -559,121 +621,9 @@ paths:
         '400':
           description: Bad Request
 
-  /historicoproprietario:
-    post:
-      tags: [Veiculares]
-      summary: Histórico de Proprietários
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PlacaRequest'
-      responses:
-        '200':
-          description: Sucesso
-
-  /historicoroubofurto:
-    post:
-      tags: [Veiculares]
-      summary: Histórico Roubo e Furto
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PlacaRequest'
-      responses:
-        '200':
-          description: Sucesso
-
-  /indiciosinistro:
-    post:
-      tags: [Veiculares]
-      summary: Indício de Sinistro
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PlacaRequest'
-      responses:
-        '200':
-          description: Sucesso
-
-  /leilaoconjugado:
-    post:
-      tags: [Veiculares]
-      summary: Leilão Conjugado
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PlacaRequest'
-      responses:
-        '200':
-          description: Sucesso
-
-  /precificadorfipe:
-    post:
-      tags: [Veiculares]
-      summary: Precificador FIPE
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PlacaRequest'
-      responses:
-        '200':
-          description: Sucesso
-
-  /recall:
-    post:
-      tags: [Veiculares]
-      summary: Recall
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PlacaRequest'
-      responses:
-        '200':
-          description: Sucesso
-
-  /renainf:
-    post:
-      tags: [Veiculares]
-      summary: Renainf
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PlacaRequest'
-      responses:
-        '200':
-          description: Sucesso
-
-  /renajud:
-    post:
-      tags: [Veiculares]
-      summary: RENAJUD
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PlacaRequest'
-      responses:
-        '200':
-          description: Sucesso
-
   /veiculosagregados:
     post:
-      tags: [Veiculares]
+      tags: [Consulta Veicular]
       summary: Veículos Agregados
       requestBody:
         required: true
@@ -687,7 +637,7 @@ paths:
 
   /veiculodocumento:
     post:
-      tags: [Veiculares]
+      tags: [Consulta Veicular]
       summary: Veículo por Documento
       requestBody:
         required: true
@@ -701,7 +651,7 @@ paths:
 
   /veiculodocumentofrota:
     post:
-      tags: [Veiculares]
+      tags: [Consulta Veicular]
       summary: Veículo Documento Frota
       requestBody:
         required: true
@@ -713,80 +663,10 @@ paths:
         '200':
           description: Sucesso
 
-  /flagcnh:
-    post:
-      tags: [Veiculares]
-      summary: API Flag CNH
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CpfRequest'
-      responses:
-        '200':
-          description: Sucesso
-
-  /cnhdocumento:
-    post:
-      tags: [Veiculares]
-      summary: CNH Documento
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CpfRequest'
-      responses:
-        '200':
-          description: Sucesso
-
-  /cnhchavedupla:
-    post:
-      tags: [Veiculares]
-      summary: CNH Chave Dupla
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CpfRequest'
-      responses:
-        '200':
-          description: Sucesso
-
-  /cnhdocumentoimagem:
-    post:
-      tags: [Veiculares]
-      summary: CNH Documento Imagem
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CpfRequest'
-      responses:
-        '200':
-          description: Sucesso
-
-  /cnhpontuacao:
-    post:
-      tags: [Veiculares]
-      summary: CNH Pontuação
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CpfRequest'
-      responses:
-        '200':
-          description: Sucesso
-
   /veiculoproprietarioplaca:
     post:
-      tags: [Veiculares]
-      summary: Veiculo Proprietário Placa
+      tags: [Consulta Veicular]
+      summary: Veículo Proprietário Placa
       requestBody:
         required: true
         content:
@@ -799,8 +679,36 @@ paths:
 
   /veiculoproprietarioplacahistorico:
     post:
-      tags: [Veiculares]
-      summary: Veiculo Proprietário Placa Histórico
+      tags: [Consulta Veicular]
+      summary: Veículo Proprietário Placa Histórico
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlacaRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /historicoproprietario:
+    post:
+      tags: [Consulta Veicular]
+      summary: Histórico de Proprietários
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlacaRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /historicoroubofurto:
+    post:
+      tags: [Consulta Veicular]
+      summary: Histórico Roubo e Furto
       requestBody:
         required: true
         content:
@@ -813,7 +721,7 @@ paths:
 
   /debitosrestricoesproprietarios:
     post:
-      tags: [Veiculares]
+      tags: [Consulta Veicular]
       summary: Débitos, Restrições e Proprietários
       requestBody:
         required: true
@@ -827,23 +735,8 @@ paths:
 
   /veicularbnacionalonline:
     post:
-      tags: [Veiculares]
-      summary: Veicular BNacional On Line
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PlacaRequest'
-      responses:
-        '200':
-          description: Sucesso
-
-  /atpve:
-    post:
-      tags: [Veiculares]
-      summary: ATPVe
-      description: Cadastrar, Registrar e Recuperar ATPVe.
+      tags: [Consulta Veicular]
+      summary: Veicular BNacional Online
       requestBody:
         required: true
         content:
@@ -856,7 +749,7 @@ paths:
 
   /renavam:
     post:
-      tags: [Veiculares]
+      tags: [Consulta Veicular]
       summary: Renavam
       requestBody:
         required: true
@@ -870,7 +763,7 @@ paths:
 
   /renavamonline:
     post:
-      tags: [Veiculares]
+      tags: [Consulta Veicular]
       summary: Renavam Online
       requestBody:
         required: true
@@ -882,10 +775,106 @@ paths:
         '200':
           description: Sucesso
 
+  # ─────────────────────────────────────────────
+  # Restricoes e Gravames
+  # ─────────────────────────────────────────────
+
+  /renajud:
+    post:
+      tags: [Restricoes e Gravames]
+      summary: RENAJUD
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlacaRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /renainf:
+    post:
+      tags: [Restricoes e Gravames]
+      summary: Renainf
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlacaRequest'
+      responses:
+        '200':
+          description: Sucesso
+
   /gravame:
     post:
-      tags: [Veiculares]
+      tags: [Restricoes e Gravames]
       summary: Gravame
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlacaRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /atpve:
+    post:
+      tags: [Restricoes e Gravames]
+      summary: ATPVe
+      description: Cadastrar, Registrar e Recuperar ATPVe.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlacaRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /ecrlv:
+    post:
+      tags: [Restricoes e Gravames]
+      summary: ECRLV
+      description: Extrato do CRLV digital. Suporta primeira e segunda requisição.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlacaRequest'
+      responses:
+        '200':
+          description: Sucesso
+        '401':
+          description: Não autorizado
+
+  # ─────────────────────────────────────────────
+  # Risco e Sinistro
+  # ─────────────────────────────────────────────
+
+  /indiciosinistro:
+    post:
+      tags: [Risco e Sinistro]
+      summary: Indício de Sinistro
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlacaRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /leilaoconjugado:
+    post:
+      tags: [Risco e Sinistro]
+      summary: Leilão Conjugado
       requestBody:
         required: true
         content:
@@ -898,7 +887,7 @@ paths:
 
   /farolleilao:
     post:
-      tags: [Veiculares]
+      tags: [Risco e Sinistro]
       summary: Farol Leilão
       requestBody:
         required: true
@@ -910,14 +899,564 @@ paths:
         '200':
           description: Sucesso
 
+  /precificadorfipe:
+    post:
+      tags: [Risco e Sinistro]
+      summary: Precificador FIPE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlacaRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /recall:
+    post:
+      tags: [Risco e Sinistro]
+      summary: Recall
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlacaRequest'
+      responses:
+        '200':
+          description: Sucesso
+
   # ─────────────────────────────────────────────
-  # RELATÓRIO JURÍDICO
+  # 3. CNH e Condutores
+  # ─────────────────────────────────────────────
+
+  /flagcnh:
+    post:
+      tags: [CNH e Condutores]
+      summary: API Flag CNH
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /cnhdocumento:
+    post:
+      tags: [CNH e Condutores]
+      summary: CNH Documento
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /cnhchavedupla:
+    post:
+      tags: [CNH e Condutores]
+      summary: CNH Chave Dupla
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /cnhdocumentoimagem:
+    post:
+      tags: [CNH e Condutores]
+      summary: CNH Documento Imagem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /cnhpontuacao:
+    post:
+      tags: [CNH e Condutores]
+      summary: CNH Pontuação
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  # ─────────────────────────────────────────────
+  # Enriquecimento PF
+  # ─────────────────────────────────────────────
+
+  /pfpesquisa:
+    post:
+      tags: [Enriquecimento PF]
+      summary: PF Pesquisa — CPF
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /pfnome:
+    post:
+      tags: [Enriquecimento PF]
+      summary: PF Nome
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /pftelefonecpf:
+    post:
+      tags: [Enriquecimento PF]
+      summary: PF Telefone — CPF
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /pftelefone:
+    post:
+      tags: [Enriquecimento PF]
+      summary: PF Telefone
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /pfemailcpf:
+    post:
+      tags: [Enriquecimento PF]
+      summary: PF Email — CPF
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /pfemail:
+    post:
+      tags: [Enriquecimento PF]
+      summary: PF Email
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /parentescopf:
+    post:
+      tags: [Enriquecimento PF]
+      summary: PF Parentesco
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  # ─────────────────────────────────────────────
+  # Receita Federal PF
+  # ─────────────────────────────────────────────
+
+  /pfreceitafederal:
+    post:
+      tags: [Receita Federal PF]
+      summary: PF Receita Federal — CPF
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /pfreceitafederalxpfdadosbasicos:
+    post:
+      tags: [Receita Federal PF]
+      summary: PF Receita Federal x PF Dados Básicos
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /pfcadastraldataset:
+    post:
+      tags: [Receita Federal PF]
+      summary: PF Cadastral Dataset — Dados Básicos
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  # ─────────────────────────────────────────────
+  # Scores PF
+  # ─────────────────────────────────────────────
+
+  /scoreforcavinculopf:
+    post:
+      tags: [Scores PF]
+      summary: PF Score Força Vínculo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /ocupacaopf:
+    post:
+      tags: [Scores PF]
+      summary: API Ocupação PF
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /scorebancosfinanceiraspf:
+    post:
+      tags: [Scores PF]
+      summary: PF Score Bancos e Financeiras
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /rendapresumida:
+    post:
+      tags: [Scores PF]
+      summary: PF Renda Presumida Bancos
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /rendapresumidacredify:
+    post:
+      tags: [Scores PF]
+      summary: API Renda Presumida PF Credify
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  # ─────────────────────────────────────────────
+  # Enriquecimento PJ
+  # ─────────────────────────────────────────────
+
+  /pjpesquisa:
+    post:
+      tags: [Enriquecimento PJ]
+      summary: PJ Pesquisa — CNPJ
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CnpjRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /pjrazao:
+    post:
+      tags: [Enriquecimento PJ]
+      summary: PJ Razão Social
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CnpjRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /pjtelefonecnpj:
+    post:
+      tags: [Enriquecimento PJ]
+      summary: PJ Telefone — CNPJ
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CnpjRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /pjtelefone:
+    post:
+      tags: [Enriquecimento PJ]
+      summary: PJ Telefone
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CnpjRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /pjemailcnpj:
+    post:
+      tags: [Enriquecimento PJ]
+      summary: PJ Email — CNPJ
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CnpjRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /pjemail:
+    post:
+      tags: [Enriquecimento PJ]
+      summary: PJ Email
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CnpjRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  # ─────────────────────────────────────────────
+  # Receita Federal PJ
+  # ─────────────────────────────────────────────
+
+  /pjreceitafederal:
+    post:
+      tags: [Receita Federal PJ]
+      summary: PJ Receita Federal — CNPJ
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CnpjRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /pjcadastraldataset:
+    post:
+      tags: [Receita Federal PJ]
+      summary: PJ Cadastral Dataset — Dados Básicos
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CnpjRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  # ─────────────────────────────────────────────
+  # Quadro Societario
+  # ─────────────────────────────────────────────
+
+  /quadrosocietario:
+    post:
+      tags: [Quadro Societario]
+      summary: PJ Quadro Societário
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CnpjRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /beneficiariofinalpj:
+    post:
+      tags: [Quadro Societario]
+      summary: PJ Beneficiário Final
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CnpjRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  # ─────────────────────────────────────────────
+  # Indicadores PJ
+  # ─────────────────────────────────────────────
+
+  /scorebancosfinanceiraspj:
+    post:
+      tags: [Indicadores PJ]
+      summary: PJ Score Bancos e Financeiras
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CnpjRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /faturamentopresumidopj:
+    post:
+      tags: [Indicadores PJ]
+      summary: Faturamento Presumido PJ
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CnpjRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /faturamentopresumidopjcredify:
+    post:
+      tags: [Indicadores PJ]
+      summary: API Faturamento Presumido PJ Credify
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CnpjRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /debitosestaduaispj:
+    post:
+      tags: [Indicadores PJ]
+      summary: Débitos Estaduais PJ
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CnpjRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /sintegra:
+    post:
+      tags: [Indicadores PJ]
+      summary: API Sintegra
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CnpjRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  # ─────────────────────────────────────────────
+  # Relatorio Juridico
   # ─────────────────────────────────────────────
 
   /cpfcnpjtotalizador:
     post:
-      tags: [Relatório Jurídico]
-      summary: Relatório Jurídico - CPF / CNPJ
+      tags: [Relatorio Juridico]
+      summary: CPF / CNPJ Totalizador
       description: Totalizador de processos judiciais por CPF ou CNPJ.
       requestBody:
         required: true
@@ -931,8 +1470,8 @@ paths:
 
   /nomerazaototalizador:
     post:
-      tags: [Relatório Jurídico]
-      summary: Relatório Jurídico - Nome / Razão Social
+      tags: [Relatorio Juridico]
+      summary: Nome / Razão Totalizador
       description: Totalizador de processos judiciais por nome ou razão social.
       requestBody:
         required: true
@@ -950,8 +1489,8 @@ paths:
 
   /detalhesprocesso/id:
     post:
-      tags: [Relatório Jurídico]
-      summary: Relatório Jurídico Detalhes - ID do Processo
+      tags: [Relatorio Juridico]
+      summary: Detalhes do Processo — ID do Processo
       requestBody:
         required: true
         content:
@@ -968,8 +1507,8 @@ paths:
 
   /detalhesprocesso/numero:
     post:
-      tags: [Relatório Jurídico]
-      summary: Relatório Jurídico Detalhes - Número do Processo
+      tags: [Relatorio Juridico]
+      summary: Detalhes do Processo — Número do Processo
       requestBody:
         required: true
         content:
@@ -985,48 +1524,13 @@ paths:
           description: Sucesso
 
   # ─────────────────────────────────────────────
-  # MARKETING
+  # Restricoes e Apontamentos
   # ─────────────────────────────────────────────
 
-  /geraleadscep:
+  /mandadosprisao:
     post:
-      tags: [Marketing]
-      summary: Gera Leads - CEP
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CepRequest'
-      responses:
-        '200':
-          description: Sucesso
-
-  /geraleadsuf:
-    post:
-      tags: [Marketing]
-      summary: Gera Leads - UF / Município
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                uf:
-                  type: string
-                  example: "SP"
-                municipio:
-                  type: string
-                  example: "São Paulo"
-      responses:
-        '200':
-          description: Sucesso
-
-  /geraleadsdetalhes:
-    post:
-      tags: [Marketing]
-      summary: Gera Leads - Detalhes
+      tags: [Restricoes e Apontamentos]
+      summary: Mandados de Prisão
       requestBody:
         required: true
         content:
@@ -1037,349 +1541,41 @@ paths:
         '200':
           description: Sucesso
 
-  /geraleadsdetalhes/lote:
+  /ccf:
     post:
-      tags: [Marketing]
-      summary: Gera Leads - Detalhes Lote
+      tags: [Restricoes e Apontamentos]
+      summary: CCF — Cheques sem Fundos
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                cpfs:
-                  type: array
-                  items:
-                    type: string
-                  example: ["000.000.000-00", "111.111.111-11"]
+              $ref: '#/components/schemas/CpfCnpjRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /crednetlight:
+    post:
+      tags: [Restricoes e Apontamentos]
+      summary: Crednet Light
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfCnpjRequest'
       responses:
         '200':
           description: Sucesso
 
   # ─────────────────────────────────────────────
-  # CADASTRAL PF
-  # ─────────────────────────────────────────────
-
-  /pfpesquisa:
-    post:
-      tags: [Cadastral PF]
-      summary: PF Pesquisa - CPF
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CpfRequest'
-      responses:
-        '200':
-          description: Sucesso
-
-  /pftelefonecpf:
-    post:
-      tags: [Cadastral PF]
-      summary: PF Telefone - CPF
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CpfRequest'
-      responses:
-        '200':
-          description: Sucesso
-
-  /pfemailcpf:
-    post:
-      tags: [Cadastral PF]
-      summary: PF Email - CPF
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CpfRequest'
-      responses:
-        '200':
-          description: Sucesso
-
-  /pfnome:
-    post:
-      tags: [Cadastral PF]
-      summary: PF Nome
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CpfRequest'
-      responses:
-        '200':
-          description: Sucesso
-
-  /pftelefone:
-    post:
-      tags: [Cadastral PF]
-      summary: PF Telefone
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CpfRequest'
-      responses:
-        '200':
-          description: Sucesso
-
-  /pfemail:
-    post:
-      tags: [Cadastral PF]
-      summary: PF Email
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CpfRequest'
-      responses:
-        '200':
-          description: Sucesso
-
-  /parentescopf:
-    post:
-      tags: [Cadastral PF]
-      summary: PF Parentesco
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CpfRequest'
-      responses:
-        '200':
-          description: Sucesso
-
-  /pfreceitafederalxpfdadosbasicos:
-    post:
-      tags: [Cadastral PF]
-      summary: PF Receita Federal x PF Dados Básicos
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CpfRequest'
-      responses:
-        '200':
-          description: Sucesso
-
-  /pfreceitafederal:
-    post:
-      tags: [Cadastral PF]
-      summary: PF Receita Federal - CPF
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CpfRequest'
-      responses:
-        '200':
-          description: Sucesso
-
-  /pfcadastraldataset:
-    post:
-      tags: [Cadastral PF]
-      summary: PF Cadastral Dataset - Dados Básicos
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CpfRequest'
-      responses:
-        '200':
-          description: Sucesso
-
-  /scoreforcavinculopf:
-    post:
-      tags: [Cadastral PF]
-      summary: PF Score Força Vínculo
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CpfRequest'
-      responses:
-        '200':
-          description: Sucesso
-
-  /ocupacaopf:
-    post:
-      tags: [Cadastral PF]
-      summary: API Ocupação PF
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CpfRequest'
-      responses:
-        '200':
-          description: Sucesso
-
-  # ─────────────────────────────────────────────
-  # CADASTRAL PJ
-  # ─────────────────────────────────────────────
-
-  /pjpesquisa:
-    post:
-      tags: [Cadastral PJ]
-      summary: PJ Pesquisa - CNPJ
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CnpjRequest'
-      responses:
-        '200':
-          description: Sucesso
-
-  /pjtelefonecnpj:
-    post:
-      tags: [Cadastral PJ]
-      summary: PJ Telefone - CNPJ
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CnpjRequest'
-      responses:
-        '200':
-          description: Sucesso
-
-  /pjemailcnpj:
-    post:
-      tags: [Cadastral PJ]
-      summary: PJ Email - CNPJ
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CnpjRequest'
-      responses:
-        '200':
-          description: Sucesso
-
-  /pjrazao:
-    post:
-      tags: [Cadastral PJ]
-      summary: PJ Razão Social
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CnpjRequest'
-      responses:
-        '200':
-          description: Sucesso
-
-  /pjtelefone:
-    post:
-      tags: [Cadastral PJ]
-      summary: PJ Telefone
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CnpjRequest'
-      responses:
-        '200':
-          description: Sucesso
-
-  /pjemail:
-    post:
-      tags: [Cadastral PJ]
-      summary: PJ Email
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CnpjRequest'
-      responses:
-        '200':
-          description: Sucesso
-
-  /pjreceitafederal:
-    post:
-      tags: [Cadastral PJ]
-      summary: PJ Receita Federal - CNPJ
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CnpjRequest'
-      responses:
-        '200':
-          description: Sucesso
-
-  /pjcadastraldataset:
-    post:
-      tags: [Cadastral PJ]
-      summary: PJ Cadastral Dataset - Dados Básicos
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CnpjRequest'
-      responses:
-        '200':
-          description: Sucesso
-
-  /quadrosocietario:
-    post:
-      tags: [Cadastral PJ]
-      summary: PJ API Quadro Societário
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CnpjRequest'
-      responses:
-        '200':
-          description: Sucesso
-
-  /beneficiariofinalpj:
-    post:
-      tags: [Cadastral PJ]
-      summary: PJ Beneficiário Final
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CnpjRequest'
-      responses:
-        '200':
-          description: Sucesso
-
-  # ─────────────────────────────────────────────
-  # KYC
+  # Produtos KYC
   # ─────────────────────────────────────────────
 
   /sancoes:
     post:
-      tags: [KYC]
+      tags: [Produtos KYC]
       summary: KYC Compliance Sanções
       requestBody:
         required: true
@@ -1393,7 +1589,7 @@ paths:
 
   /kycrh:
     post:
-      tags: [KYC]
+      tags: [Produtos KYC]
       summary: KYC RH
       requestBody:
         required: true
@@ -1407,7 +1603,7 @@ paths:
 
   /kycbet:
     post:
-      tags: [KYC]
+      tags: [Produtos KYC]
       summary: KYC BET
       requestBody:
         required: true
@@ -1420,40 +1616,12 @@ paths:
           description: Sucesso
 
   # ─────────────────────────────────────────────
-  # BACKGROUND CHECKS E ANTIFRAUDE
+  # Exposicao Publica
   # ─────────────────────────────────────────────
-
-  /backgroundcheckpf:
-    post:
-      tags: [Background Checks e Antifraude]
-      summary: Background Check PF
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CpfRequest'
-      responses:
-        '200':
-          description: Sucesso
-
-  /backgroundcheckpj:
-    post:
-      tags: [Background Checks e Antifraude]
-      summary: Background Check PJ
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CnpjRequest'
-      responses:
-        '200':
-          description: Sucesso
 
   /exposicaopublicapf:
     post:
-      tags: [Background Checks e Antifraude]
+      tags: [Exposicao Publica]
       summary: Exposição Pública PF
       requestBody:
         required: true
@@ -1467,7 +1635,7 @@ paths:
 
   /exposicaopublicapj:
     post:
-      tags: [Background Checks e Antifraude]
+      tags: [Exposicao Publica]
       summary: Exposição Pública PJ
       requestBody:
         required: true
@@ -1479,59 +1647,14 @@ paths:
         '200':
           description: Sucesso
 
-  /autenticatitularcartao:
-    post:
-      tags: [Background Checks e Antifraude]
-      summary: Autentica Titular Cartão
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                cpf:
-                  type: string
-                  example: "000.000.000-00"
-                bin:
-                  type: string
-                  example: "411111"
-      responses:
-        '200':
-          description: Sucesso
+  # ─────────────────────────────────────────────
+  # Background Check
+  # ─────────────────────────────────────────────
 
-  /ccf:
+  /backgroundcheckpf:
     post:
-      tags: [Background Checks e Antifraude]
-      summary: CCF Cheques sem Fundos
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CpfCnpjRequest'
-      responses:
-        '200':
-          description: Sucesso
-
-  /crednetlight:
-    post:
-      tags: [Background Checks e Antifraude]
-      summary: Crednet Light (Pendências)
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CpfCnpjRequest'
-      responses:
-        '200':
-          description: Sucesso
-
-  /scorebancosfinanceiraspf:
-    post:
-      tags: [Background Checks e Antifraude]
-      summary: PF Score Bancos e Financeiras
+      tags: [Background Check]
+      summary: API Background Check PF
       requestBody:
         required: true
         content:
@@ -1542,10 +1665,10 @@ paths:
         '200':
           description: Sucesso
 
-  /scorebancosfinanceiraspj:
+  /backgroundcheckpj:
     post:
-      tags: [Background Checks e Antifraude]
-      summary: PJ Score Bancos e Financeiras
+      tags: [Background Check]
+      summary: API Background Check PJ
       requestBody:
         required: true
         content:
@@ -1556,9 +1679,27 @@ paths:
         '200':
           description: Sucesso
 
+  # ─────────────────────────────────────────────
+  # Validacao Cadastral
+  # ─────────────────────────────────────────────
+
+  /validacadastral:
+    post:
+      tags: [Validacao Cadastral]
+      summary: Validação Cadastral
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfCnpjRequest'
+      responses:
+        '200':
+          description: Sucesso
+
   /proprietariotelefoneoperadora:
     post:
-      tags: [Background Checks e Antifraude]
+      tags: [Validacao Cadastral]
       summary: Proprietário Telefone Operadora
       requestBody:
         required: true
@@ -1574,168 +1715,9 @@ paths:
         '200':
           description: Sucesso
 
-  /faturamentopresumidopj:
-    post:
-      tags: [Background Checks e Antifraude]
-      summary: Faturamento Presumido PJ
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CnpjRequest'
-      responses:
-        '200':
-          description: Sucesso
-
-  /faturamentopresumidopjcredify:
-    post:
-      tags: [Background Checks e Antifraude]
-      summary: API Faturamento Presumido PJ Credify
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CnpjRequest'
-      responses:
-        '200':
-          description: Sucesso
-
-  /rendapresumida:
-    post:
-      tags: [Background Checks e Antifraude]
-      summary: PF Renda Presumida Bancos
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CpfRequest'
-      responses:
-        '200':
-          description: Sucesso
-
-  /rendapresumidacredify:
-    post:
-      tags: [Background Checks e Antifraude]
-      summary: API Renda Presumida PF Credify
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CpfRequest'
-      responses:
-        '200':
-          description: Sucesso
-
-  /debitosestaduaispj:
-    post:
-      tags: [Background Checks e Antifraude]
-      summary: Débitos Estaduais PJ
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CnpjRequest'
-      responses:
-        '200':
-          description: Sucesso
-
-  /validabin:
-    post:
-      tags: [Background Checks e Antifraude]
-      summary: API Valida BIN
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                bin:
-                  type: string
-                  example: "411111"
-      responses:
-        '200':
-          description: Sucesso
-
-  /validacadastral:
-    post:
-      tags: [Background Checks e Antifraude]
-      summary: Validação Cadastral
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CpfCnpjRequest'
-      responses:
-        '200':
-          description: Sucesso
-
-  /autenticaemail:
-    post:
-      tags: [Background Checks e Antifraude]
-      summary: Autentica Email
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                  example: "exemplo@email.com"
-      responses:
-        '200':
-          description: Sucesso
-
-  /autenticaemailipendereco:
-    post:
-      tags: [Background Checks e Antifraude]
-      summary: Autentica Email IP Endereço
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                  example: "exemplo@email.com"
-                ip:
-                  type: string
-                  example: "192.168.0.1"
-      responses:
-        '200':
-          description: Sucesso
-
-  /emailhistoryrisk:
-    post:
-      tags: [Background Checks e Antifraude]
-      summary: Email History Risk
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                  example: "exemplo@email.com"
-      responses:
-        '200':
-          description: Sucesso
-
   /validatelefonedocumento:
     post:
-      tags: [Background Checks e Antifraude]
+      tags: [Validacao Cadastral]
       summary: Validação de Telefone por Documento
       requestBody:
         required: true
@@ -1756,7 +1738,7 @@ paths:
 
   /validawhatsapp:
     post:
-      tags: [Background Checks e Antifraude]
+      tags: [Validacao Cadastral]
       summary: Validação de WhatsApp
       requestBody:
         required: true
@@ -1772,9 +1754,113 @@ paths:
         '200':
           description: Sucesso
 
+  /autenticaemail:
+    post:
+      tags: [Validacao Cadastral]
+      summary: Autentica Email
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: "exemplo@email.com"
+      responses:
+        '200':
+          description: Sucesso
+
+  /autenticaemailipendereco:
+    post:
+      tags: [Validacao Cadastral]
+      summary: Autentica Email IP Endereço
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: "exemplo@email.com"
+                ip:
+                  type: string
+                  example: "192.168.0.1"
+      responses:
+        '200':
+          description: Sucesso
+
+  /emailhistoryrisk:
+    post:
+      tags: [Validacao Cadastral]
+      summary: Email History Risk
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: "exemplo@email.com"
+      responses:
+        '200':
+          description: Sucesso
+
+  # ─────────────────────────────────────────────
+  # Cartao e BIN
+  # ─────────────────────────────────────────────
+
+  /autenticatitularcartao:
+    post:
+      tags: [Cartao e BIN]
+      summary: Autentica Titular Cartão
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cpf:
+                  type: string
+                  example: "000.000.000-00"
+                bin:
+                  type: string
+                  example: "411111"
+      responses:
+        '200':
+          description: Sucesso
+
+  /validabin:
+    post:
+      tags: [Cartao e BIN]
+      summary: API Valida BIN
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                bin:
+                  type: string
+                  example: "411111"
+      responses:
+        '200':
+          description: Sucesso
+
+  # ─────────────────────────────────────────────
+  # Biometria Facial
+  # ─────────────────────────────────────────────
+
   /biometriafacial1x1:
     post:
-      tags: [Background Checks e Antifraude]
+      tags: [Biometria Facial]
       summary: Validação Biometria Facial 1x1
       requestBody:
         required: true
@@ -1795,7 +1881,7 @@ paths:
 
   /biometriafacial1xn:
     post:
-      tags: [Background Checks e Antifraude]
+      tags: [Biometria Facial]
       summary: Validação Biométrica Facial 1xN
       requestBody:
         required: true
@@ -1813,8 +1899,8 @@ paths:
 
   /biometriafacialdatavalid:
     post:
-      tags: [Background Checks e Antifraude]
-      summary: Biometria Facial - Datavalid
+      tags: [Biometria Facial]
+      summary: Biometria Facial — Datavalid
       requestBody:
         required: true
         content:
@@ -1833,26 +1919,12 @@ paths:
           description: Sucesso
 
   # ─────────────────────────────────────────────
-  # OUTROS
+  # Documentoscopia
   # ─────────────────────────────────────────────
-
-  /mandadosprisao:
-    post:
-      tags: [Outros]
-      summary: Mandados de Prisão
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CpfRequest'
-      responses:
-        '200':
-          description: Sucesso
 
   /documentoscopiadigital:
     post:
-      tags: [Outros]
+      tags: [Documentoscopia]
       summary: Documentoscopia Digital
       requestBody:
         required: true
@@ -1870,7 +1942,7 @@ paths:
 
   /documentoscopiaidentificacao:
     post:
-      tags: [Outros]
+      tags: [Documentoscopia]
       summary: Documentoscopia de Documentos de Identificação
       requestBody:
         required: true
@@ -1886,12 +1958,28 @@ paths:
         '200':
           description: Sucesso
 
-  /sso:
+  # ─────────────────────────────────────────────
+  # 9. Marketing e Leads
+  # ─────────────────────────────────────────────
+
+  /geraleadscep:
     post:
-      tags: [Outros]
-      summary: SSO
-      description: Autenticação via Single Sign-On.
-      security: []
+      tags: [Marketing e Leads]
+      summary: Gera Leads CEP
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CepRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /geraleadsuf:
+    post:
+      tags: [Marketing e Leads]
+      summary: Gera Leads UF / Município
       requestBody:
         required: true
         content:
@@ -1899,17 +1987,34 @@ paths:
             schema:
               type: object
               properties:
-                token_sso:
+                uf:
                   type: string
-                  example: "sso-token-aqui"
+                  example: "SP"
+                municipio:
+                  type: string
+                  example: "São Paulo"
       responses:
         '200':
           description: Sucesso
 
-  /webhook:
+  /geraleadsdetalhes:
     post:
-      tags: [Outros]
-      summary: Webhook (Decisionfy)
+      tags: [Marketing e Leads]
+      summary: Gera Leads Detalhes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpfRequest'
+      responses:
+        '200':
+          description: Sucesso
+
+  /geraleadsdetalhes/lote:
+    post:
+      tags: [Marketing e Leads]
+      summary: Gera Leads Detalhes — Lote
       requestBody:
         required: true
         content:
@@ -1917,29 +2022,18 @@ paths:
             schema:
               type: object
               properties:
-                url:
-                  type: string
-                  example: "https://seudominio.com/webhook"
-                evento:
-                  type: string
-                  example: "consulta.finalizada"
+                cpfs:
+                  type: array
+                  items:
+                    type: string
+                  example: ["000.000.000-00", "111.111.111-11"]
       responses:
         '200':
           description: Sucesso
 
-  /sintegra:
-    post:
-      tags: [Outros]
-      summary: API Sintegra
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CnpjRequest'
-      responses:
-        '200':
-          description: Sucesso
+  # ─────────────────────────────────────────────
+  # OUTROS (não mapeados na estrutura principal)
+  # ─────────────────────────────────────────────
 
   /fgts:
     post:
@@ -1956,23 +2050,49 @@ paths:
           description: Sucesso
 
 tags:
-  - name: Auth
-    description: Autenticação e geração de token JWT
-  - name: Veiculares - Serviços
-    description: Serviços de documentação veicular (ECRLV)
-  - name: Veiculares
-    description: Consultas veiculares - placa, CNH, histórico, leilão, FIPE e mais
-  - name: Relatório Jurídico
-    description: Processos judiciais - totalizadores e detalhes de processos
-  - name: Marketing
-    description: Geração de leads por CEP, UF e município
-  - name: Cadastral PF
-    description: Dados cadastrais de Pessoa Física via CPF
-  - name: Cadastral PJ
-    description: Dados cadastrais de Pessoa Jurídica via CNPJ
-  - name: KYC
-    description: Know Your Customer - compliance, sanções, RH e BET
-  - name: Background Checks e Antifraude
-    description: Verificações de risco, fraude, biometria, score e validações
+  - name: Autenticacao e Integracao Tecnica
+    description: Autenticação JWT, SSO e Webhook Decisionfy
+  - name: Consulta Veicular
+    description: Consultas de veículos por placa, documento e proprietário
+  - name: Restricoes e Gravames
+    description: RENAJUD, Renainf, Gravame, ATPVe e ECRLV
+  - name: Risco e Sinistro
+    description: Indício de sinistro, leilão, farol, FIPE e recall
+  - name: CNH e Condutores
+    description: Consultas de CNH por CPF — flag, documento, pontuação e imagem
+  - name: Enriquecimento PF
+    description: Dados cadastrais de Pessoa Física — pesquisa, telefone, email e parentesco
+  - name: Receita Federal PF
+    description: Receita Federal e dataset cadastral de Pessoa Física
+  - name: Scores PF
+    description: Score, ocupação e renda presumida de Pessoa Física
+  - name: Enriquecimento PJ
+    description: Dados cadastrais de Pessoa Jurídica — pesquisa, telefone e email
+  - name: Receita Federal PJ
+    description: Receita Federal e dataset cadastral de Pessoa Jurídica
+  - name: Quadro Societario
+    description: Quadro societário e beneficiário final de empresas
+  - name: Indicadores PJ
+    description: Score, faturamento presumido, débitos estaduais e Sintegra
+  - name: Relatorio Juridico
+    description: Totalizadores e detalhes de processos judiciais
+  - name: Restricoes e Apontamentos
+    description: Mandados de prisão, CCF e pendências financeiras
+  - name: Produtos KYC
+    description: KYC Compliance — sanções, RH e BET
+  - name: Exposicao Publica
+    description: Exposição pública de Pessoa Física e Jurídica
+  - name: Background Check
+    description: Background Check de Pessoa Física e Jurídica
+  - name: Validacao Cadastral
+    description: Validação cadastral, telefone, WhatsApp e email
+  - name: Cartao e BIN
+    description: Autenticação de titular de cartão e validação de BIN
+  - name: Biometria Facial
+    description: Validação biométrica facial 1x1, 1xN e Datavalid
+  - name: Documentoscopia
+    description: Documentoscopia digital e de documentos de identificação
+  - name: Marketing e Leads
+    description: Geração de leads por CEP, UF, município e lote
   - name: Outros
-    description: Documentoscopia, SSO, Webhook, Sintegra e FGTS
+    description: Endpoints não mapeados na estrutura principal

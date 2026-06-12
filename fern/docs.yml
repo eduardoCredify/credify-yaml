@@ -5,6 +5,7 @@
 # Endereço do site publicado (ajuste se usar domínio próprio)
 instances:
   - url: credify.docs.buildwithfern.com
+    custom-domain: docs.credify.com.br
 
 title: Credify API
 
@@ -67,6 +68,10 @@ navigation:
     layout:
       - api: API Reference
         layout:
+
+          - section: "1. Autenticação e Integração Técnica"
+            contents:
+              - POST /auth
 
           - section: "2. Veículos e Mobilidade"
             contents:

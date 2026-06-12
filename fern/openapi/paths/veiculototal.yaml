@@ -71,7 +71,9 @@ post:
     | **IdConsulta** | Identificador da consulta. | string | Sim |
     | **Placa** | Placa do veículo a ser consultado. | string | Sim |
 
-    <Accordion title="TABELA DE CAMPOS DE RETORNO">
+    <AccordionGroup>
+
+    <Accordion title="Cabeçalho da Resposta — CONSULTA">
 
     | **Campo** | **Descrição** | **Formato** |
     |:----------|:--------------|:------------|
@@ -80,28 +82,13 @@ post:
     | **CONSULTA.LOGON** | Código de identificação da credencial de acesso que realizou a chamada. | string |
     | **CONSULTA.IDCONSULTA** | Código identificador retornado para conciliação com o enviado na requisição. | string |
     | **CODIGO** | Array com os códigos de status de cada base consultada (1 = Sucesso, 2 = Não Encontrado, 3 = Erro). | array |
-    | **INDICIOSINISTROVEICULAR.DESCRICAORETORNO** | Descrição textual do resultado da consulta de indício de sinistro. | string |
-    | **INDICIOSINISTROVEICULAR.INDICIODESINISTRO** | Indica se há indício de sinistro veicular (0 = Sem indício). | string |
-    | **RECALL.DESCRICAORETORNO** | Descrição do resultado da consulta de recall junto ao fabricante. | string |
-    | **HISTORICOROUBOFURTO.DESCRICAORETORNO** | Descrição do resultado da consulta de histórico de roubo ou furto. | string |
-    | **LEILAOCONJUGADO.DESCRICAORETORNO** | Descrição do resultado da consulta de participação em leilão. | string |
-    | **HISTORICOPROPRIETARIO.DESCRICAORETORNO** | Descrição textual do resultado da consulta de histórico de proprietários. | string |
-    | **HISTORICOPROPRIETARIO.REGISTRO_N.CHAVERETORNO** | Chave única de identificação do retorno da ocorrência. | string |
-    | **HISTORICOPROPRIETARIO.REGISTRO_N.OCORRENCIA** | Número sequencial da ocorrência no histórico de proprietários. | string |
-    | **HISTORICOPROPRIETARIO.REGISTRO_N.UF_DUT** | UF do DUT (Documento Único de Transferência) do proprietário. | string |
-    | **HISTORICOPROPRIETARIO.REGISTRO_N.CODIGOMUNICIPIO** | Código do município do proprietário. | string |
-    | **HISTORICOPROPRIETARIO.REGISTRO_N.MUNICIPIO** | Nome do município do proprietário. | string |
-    | **HISTORICOPROPRIETARIO.REGISTRO_N.ANO_EXERCICIO** | Ano de exercício do registro do proprietário. | string |
-    | **HISTORICOPROPRIETARIO.REGISTRO_N.PLACA** | Placa do veículo vinculada ao registro. | string |
-    | **HISTORICOPROPRIETARIO.REGISTRO_N.RENAVAM** | Número do RENAVAM do veículo. | string |
-    | **HISTORICOPROPRIETARIO.REGISTRO_N.CHASSI** | Número do chassi do veículo. | string |
-    | **HISTORICOPROPRIETARIO.REGISTRO_N.CGC_CPF** | CPF ou CNPJ do proprietário registrado. | string |
-    | **HISTORICOPROPRIETARIO.REGISTRO_N.NOME_PROPRIETARIO** | Nome completo ou razão social do proprietário. | string |
-    | **HISTORICOPROPRIETARIO.REGISTRO_N.TIPO_DOCUMENTO** | Tipo de documento do proprietário. | string |
-    | **HISTORICOPROPRIETARIO.REGISTRO_N.CORRECAO_CHASSI_RENAVAM** | Indica se houve correção no chassi ou RENAVAM. | string |
-    | **HISTORICOPROPRIETARIO.REGISTRO_N.DATA_PROCESSAMENTO** | Ano de processamento do registro. | string |
-    | **HISTORICOPROPRIETARIO.REGISTRO_N.HORA_PROCESSAMENTO** | Hora de processamento do registro. | string |
-    | **HISTORICOPROPRIETARIO.REGISTRO_N.MOTIVO_TIPO_AUTORIZACAO** | Motivo ou tipo de autorização associado ao registro. | string |
+
+    </Accordion>
+
+    <Accordion title="🏭 Informações Fabris — VEICULARBNACIONAL">
+
+    | **Campo** | **Descrição** | **Formato** |
+    |:----------|:--------------|:------------|
     | **VEICULARBNACIONAL.REGISTRO_1.DATA_EMPLACAMENTO** | Data de emplacamento do veículo. | string |
     | **VEICULARBNACIONAL.REGISTRO_1.CHASSI** | Número do chassi do veículo. | string |
     | **VEICULARBNACIONAL.REGISTRO_1.PLACA** | Placa do veículo. | string |
@@ -150,17 +137,37 @@ post:
     | **VEICULARBNACIONAL.REGISTRO_1.DATA_LIMITE_RESTRICAO** | Data limite de vigência da restrição. | string |
     | **VEICULARBNACIONAL.REGISTRO_1.SITUACAO_VEICULO** | Situação atual do veículo (ex: EM CIRCULACAO). | string |
     | **VEICULARBNACIONAL.REGISTRO_1.NACIONALIDADE** | Nacionalidade do veículo (NACIONAL ou IMPORTADO). | string |
-    | **PRECIFICADORFIPE.DESCRICAORETORNO** | Descrição textual do resultado da consulta FIPE. | string |
-    | **PRECIFICADORFIPE.REGISTRO_1.STATUS** | Status do retorno da consulta FIPE. | string |
-    | **PRECIFICADORFIPE.REGISTRO_1.CHASSI** | Chassi utilizado na consulta FIPE. | string |
-    | **PRECIFICADORFIPE.REGISTRO_1.CODIGOFIPE** | Código FIPE do veículo. | string |
-    | **PRECIFICADORFIPE.REGISTRO_1.FABRICANTEFIPE** | Nome do fabricante conforme tabela FIPE. | string |
-    | **PRECIFICADORFIPE.REGISTRO_1.MODELOFIPE** | Descrição completa do modelo conforme tabela FIPE. | string |
-    | **PRECIFICADORFIPE.REGISTRO_1.ANOMODELOFIPE** | Ano do modelo conforme tabela FIPE. | string |
-    | **PRECIFICADORFIPE.REGISTRO_1.COMBUSTIVELFIPE** | Tipo de combustível conforme tabela FIPE (G = Gasolina, F = Flex, D = Diesel). | string |
-    | **PRECIFICADORFIPE.REGISTRO_1.PRECOFIPE** | Preço de referência FIPE do veículo. | string |
-    | **PRECIFICADORFIPE.REGISTRO_1.PRECOMEDIO** | Preço médio de mercado do veículo. | string |
-    | **PRECIFICADORFIPE.REGISTRO_1.VIGENCIA** | Mês e ano de vigência da tabela FIPE consultada. | string |
+
+    </Accordion>
+
+    <Accordion title="👥 Histórico de Proprietários — HISTORICOPROPRIETARIO">
+
+    | **Campo** | **Descrição** | **Formato** |
+    |:----------|:--------------|:------------|
+    | **HISTORICOPROPRIETARIO.DESCRICAORETORNO** | Descrição textual do resultado da consulta de histórico de proprietários. | string |
+    | **HISTORICOPROPRIETARIO.REGISTRO_N.CHAVERETORNO** | Chave única de identificação do retorno da ocorrência. | string |
+    | **HISTORICOPROPRIETARIO.REGISTRO_N.OCORRENCIA** | Número sequencial da ocorrência no histórico de proprietários. | string |
+    | **HISTORICOPROPRIETARIO.REGISTRO_N.UF_DUT** | UF do DUT (Documento Único de Transferência) do proprietário. | string |
+    | **HISTORICOPROPRIETARIO.REGISTRO_N.CODIGOMUNICIPIO** | Código do município do proprietário. | string |
+    | **HISTORICOPROPRIETARIO.REGISTRO_N.MUNICIPIO** | Nome do município do proprietário. | string |
+    | **HISTORICOPROPRIETARIO.REGISTRO_N.ANO_EXERCICIO** | Ano de exercício do registro do proprietário. | string |
+    | **HISTORICOPROPRIETARIO.REGISTRO_N.PLACA** | Placa do veículo vinculada ao registro. | string |
+    | **HISTORICOPROPRIETARIO.REGISTRO_N.RENAVAM** | Número do RENAVAM do veículo. | string |
+    | **HISTORICOPROPRIETARIO.REGISTRO_N.CHASSI** | Número do chassi do veículo. | string |
+    | **HISTORICOPROPRIETARIO.REGISTRO_N.CGC_CPF** | CPF ou CNPJ do proprietário registrado. | string |
+    | **HISTORICOPROPRIETARIO.REGISTRO_N.NOME_PROPRIETARIO** | Nome completo ou razão social do proprietário. | string |
+    | **HISTORICOPROPRIETARIO.REGISTRO_N.TIPO_DOCUMENTO** | Tipo de documento do proprietário. | string |
+    | **HISTORICOPROPRIETARIO.REGISTRO_N.CORRECAO_CHASSI_RENAVAM** | Indica se houve correção no chassi ou RENAVAM. | string |
+    | **HISTORICOPROPRIETARIO.REGISTRO_N.DATA_PROCESSAMENTO** | Ano de processamento do registro. | string |
+    | **HISTORICOPROPRIETARIO.REGISTRO_N.HORA_PROCESSAMENTO** | Hora de processamento do registro. | string |
+    | **HISTORICOPROPRIETARIO.REGISTRO_N.MOTIVO_TIPO_AUTORIZACAO** | Motivo ou tipo de autorização associado ao registro. | string |
+
+    </Accordion>
+
+    <Accordion title="📋 Situação, Débitos e Restrições — VEICULOSBDRP">
+
+    | **Campo** | **Descrição** | **Formato** |
+    |:----------|:--------------|:------------|
     | **VEICULOSBDRP.DESCRICAORETORNO** | Descrição textual do resultado da consulta BDRP. | string |
     | **VEICULOSBDRP.RETORNO.EXISTE_ERRO** | Indica se houve erro no retorno (0 = Sem erro). | string |
     | **VEICULOSBDRP.RETORNO.MSG_ERRO** | Mensagem de erro caso exista. | string |
@@ -274,6 +281,59 @@ post:
 
     </Accordion>
 
+    <Accordion title="💰 Precificação FIPE — PRECIFICADORFIPE">
+
+    | **Campo** | **Descrição** | **Formato** |
+    |:----------|:--------------|:------------|
+    | **PRECIFICADORFIPE.DESCRICAORETORNO** | Descrição textual do resultado da consulta FIPE. | string |
+    | **PRECIFICADORFIPE.REGISTRO_1.STATUS** | Status do retorno da consulta FIPE. | string |
+    | **PRECIFICADORFIPE.REGISTRO_1.CHASSI** | Chassi utilizado na consulta FIPE. | string |
+    | **PRECIFICADORFIPE.REGISTRO_1.CODIGOFIPE** | Código FIPE do veículo. | string |
+    | **PRECIFICADORFIPE.REGISTRO_1.FABRICANTEFIPE** | Nome do fabricante conforme tabela FIPE. | string |
+    | **PRECIFICADORFIPE.REGISTRO_1.MODELOFIPE** | Descrição completa do modelo conforme tabela FIPE. | string |
+    | **PRECIFICADORFIPE.REGISTRO_1.ANOMODELOFIPE** | Ano do modelo conforme tabela FIPE. | string |
+    | **PRECIFICADORFIPE.REGISTRO_1.COMBUSTIVELFIPE** | Tipo de combustível conforme tabela FIPE (G = Gasolina, F = Flex, D = Diesel). | string |
+    | **PRECIFICADORFIPE.REGISTRO_1.PRECOFIPE** | Preço de referência FIPE do veículo. | string |
+    | **PRECIFICADORFIPE.REGISTRO_1.PRECOMEDIO** | Preço médio de mercado do veículo. | string |
+    | **PRECIFICADORFIPE.REGISTRO_1.VIGENCIA** | Mês e ano de vigência da tabela FIPE consultada. | string |
+
+    </Accordion>
+
+    <Accordion title="⚠️ Indício de Sinistro — INDICIOSINISTROVEICULAR">
+
+    | **Campo** | **Descrição** | **Formato** |
+    |:----------|:--------------|:------------|
+    | **INDICIOSINISTROVEICULAR.DESCRICAORETORNO** | Descrição textual do resultado da consulta de indício de sinistro. | string |
+    | **INDICIOSINISTROVEICULAR.INDICIODESINISTRO** | Indica se há indício de sinistro veicular (0 = Sem indício). | string |
+
+    </Accordion>
+
+    <Accordion title="🚨 Roubo e Furto — HISTORICOROUBOFURTO">
+
+    | **Campo** | **Descrição** | **Formato** |
+    |:----------|:--------------|:------------|
+    | **HISTORICOROUBOFURTO.DESCRICAORETORNO** | Descrição do resultado da consulta de histórico de roubo ou furto. | string |
+
+    </Accordion>
+
+    <Accordion title="🏷️ Leilão — LEILAOCONJUGADO">
+
+    | **Campo** | **Descrição** | **Formato** |
+    |:----------|:--------------|:------------|
+    | **LEILAOCONJUGADO.DESCRICAORETORNO** | Descrição do resultado da consulta de participação em leilão. | string |
+
+    </Accordion>
+
+    <Accordion title="🔔 Recall — RECALL">
+
+    | **Campo** | **Descrição** | **Formato** |
+    |:----------|:--------------|:------------|
+    | **RECALL.DESCRICAORETORNO** | Descrição do resultado da consulta de recall junto ao fabricante. | string |
+
+    </Accordion>
+
+    </AccordionGroup>
+
     ## Lógica de Resposta (Vetor de Status)
 
     <Tip>
@@ -285,6 +345,87 @@ post:
     | `1` | Bloco processado com sucesso e contém dados. |
     | `2` | Bloco processado, mas não foram encontrados dados para o documento consultado. |
     | `3` | Bloco processado, mas ocorreu um erro no retorno dos dados. |
+
+    ## Exemplos de Resposta
+
+    <Tabs>
+    <Tab title="✅ Veículo Encontrado">
+
+    ```json
+    {
+      "CONSULTA": {
+        "CODIGORESPOSTA": "100000001",
+        "DATAHORA": "01/01/2026 10:00:00",
+        "LOGON": "00000",
+        "IDCONSULTA": "467"
+      },
+      "RESPOSTA": {
+        "CODIGO": ["1", "2", "2", "2", "1", "1", "1", "1"],
+        "INDICIOSINISTROVEICULAR": {
+          "DESCRICAORETORNO": "Sucesso",
+          "INDICIODESINISTRO": "0"
+        },
+        "RECALL": { "DESCRICAORETORNO": "NAO FOI POSSIVEL LOCALIZAR O VEICULO." },
+        "HISTORICOROUBOFURTO": { "DESCRICAORETORNO": "O VEÍCULO NÃO FOI APRESENTADO NO HISTÓRICO DE ROUBO OU FURTO." },
+        "LEILAOCONJUGADO": { "DESCRICAORETORNO": "O VEÍCULO NÃO FOI APRESENTADO NA BASE DE LEILÃO." },
+        "VEICULARBNACIONAL": {
+          "REGISTRO_1": {
+            "MARCA": "VW",
+            "MODELO": "VW/GOL 1.0",
+            "ANO_FABRICACAO": "2015",
+            "ANO_MODELO": "2016",
+            "CHASSI": "9BWZZZ377VT004251",
+            "PLACA": "ABC1234",
+            "COMBUSTIVEL": "FLEX",
+            "SITUACAO_VEICULO": "EM CIRCULACAO",
+            "RESTRICAO1": "SEM RESTRICAO"
+          }
+        },
+        "PRECIFICADORFIPE": {
+          "DESCRICAORETORNO": "SUCESSO",
+          "REGISTRO_1": {
+            "CODIGOFIPE": "005843-1",
+            "FABRICANTEFIPE": "VW - VOLKSWAGEN",
+            "MODELOFIPE": "GOL 1.0 FLEX 4P",
+            "PRECOFIPE": "32.500,00",
+            "VIGENCIA": "06/2026"
+          }
+        },
+        "VEICULOSBDRP": {
+          "DESCRICAORETORNO": "SUCESSO",
+          "RETORNO": {
+            "SITUACAOVEICULO": "CIRCULACAO",
+            "RESTRICAOFINAN": "NADA CONSTA",
+            "EXISTEDEBITODEIPVA": "NAO EXISTE DEBITO DE IPVA",
+            "CCOMUNICACAOVENDA": "NAO CONSTA COMUNICACAO DE VENDAS"
+          }
+        }
+      }
+    }
+    ```
+
+    </Tab>
+    <Tab title="❌ Não Encontrado">
+
+    ```json
+    {
+      "CONSULTA": {
+        "CODIGORESPOSTA": "*********",
+        "DATAHORA": "01/01/2026 10:00:00",
+        "LOGON": "*****",
+        "IDCONSULTA": "467"
+      },
+      "RESPOSTA": {
+        "CODIGO": ["2"],
+        "DADOS": {
+          "MSG": "Dado não encontrado na base de dados."
+        }
+      }
+    }
+    ```
+
+    </Tab>
+    </Tabs>
 
   requestBody:
     required: true

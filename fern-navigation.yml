@@ -1,0 +1,171 @@
+# ─────────────────────────────────────────────────────────────
+# Bloco de navegação para o docs.yml do Fern
+# Cole isto dentro do docs.yml, substituindo o bloco `navigation` atual.
+# A hierarquia de 3 níveis (grupo > subgrupo > endpoint) é controlada
+# AQUI, não no arquivo OpenAPI. O x-tagGroups do OpenAPI é ignorado pelo Fern.
+# ─────────────────────────────────────────────────────────────
+
+navigation:
+  - api: API Reference
+    layout:
+
+      - section: "1. Autenticação e Integração Técnica"
+        contents:
+          - POST /auth
+          - POST /sso
+          - POST /webhook
+
+      - section: "2. Veículos e Mobilidade"
+        contents:
+          - section: "2.1 Consulta Veicular"
+            contents:
+              - POST /veiculototal
+              - POST /veiculosagregados
+              - POST /veiculodocumento
+              - POST /veiculodocumentofrota
+              - POST /veiculoproprietarioplaca
+              - POST /veiculoproprietarioplacahistorico
+              - POST /historicoproprietario
+              - POST /historicoroubofurto
+              - POST /debitosrestricoesproprietarios
+              - POST /veicularbnacionalonline
+              - POST /renavam
+              - POST /renavamonline
+          - section: "2.2 Restrições, Gravames e Órgãos Oficiais"
+            contents:
+              - POST /renajud
+              - POST /renainf
+              - POST /gravame
+              - POST /atpve
+              - POST /ecrlv
+          - section: "2.3 Risco, Sinistro, Leilão e Precificação"
+            contents:
+              - POST /indiciosinistro
+              - POST /leilaoconjugado
+              - POST /farolleilao
+              - POST /precificadorfipe
+              - POST /recall
+
+      - section: "3. CNH e Condutores"
+        contents:
+          - POST /flagcnh
+          - POST /cnhdocumento
+          - POST /cnhchavedupla
+          - POST /cnhdocumentoimagem
+          - POST /cnhpontuacao
+
+      - section: "4. Cadastral Pessoa Física"
+        contents:
+          - section: "4.1 Consulta e Enriquecimento PF"
+            contents:
+              - POST /pfpesquisa
+              - POST /pfnome
+              - POST /pftelefonecpf
+              - POST /pftelefone
+              - POST /pfemailcpf
+              - POST /pfemail
+              - POST /parentescopf
+          - section: "4.2 Receita Federal e Dados Básicos PF"
+            contents:
+              - POST /pfreceitafederal
+              - POST /pfreceitafederalxpfdadosbasicos
+              - POST /pfcadastraldataset
+          - section: "4.3 Scores, Ocupação e Indicadores PF"
+            contents:
+              - POST /scoreforcavinculopf
+              - POST /ocupacaopf
+              - POST /scorebancosfinanceiraspf
+              - POST /rendapresumida
+              - POST /rendapresumidacredify
+
+      - section: "5. Cadastral Pessoa Jurídica"
+        contents:
+          - section: "5.1 Consulta e Enriquecimento PJ"
+            contents:
+              - POST /pjpesquisa
+              - POST /pjrazao
+              - POST /pjtelefonecnpj
+              - POST /pjtelefone
+              - POST /pjemailcnpj
+              - POST /pjemail
+          - section: "5.2 Receita Federal e Dados Básicos PJ"
+            contents:
+              - POST /pjreceitafederal
+              - POST /pjcadastraldataset
+          - section: "5.3 Quadro Societário e Beneficiário Final"
+            contents:
+              - POST /quadrosocietario
+              - POST /beneficiariofinalpj
+          - section: "5.4 Indicadores Comerciais e Fiscais PJ"
+            contents:
+              - POST /scorebancosfinanceiraspj
+              - POST /faturamentopresumidopj
+              - POST /faturamentopresumidopjcredify
+              - POST /debitosestaduaispj
+              - POST /sintegra
+
+      - section: "6. Jurídico, Processos e Restrições"
+        contents:
+          - section: "6.1 Relatório Jurídico"
+            contents:
+              - POST /cpfcnpjtotalizador
+              - POST /nomerazaototalizador
+              - POST /detalhesprocesso/id
+              - POST /detalhesprocesso/numero
+          - section: "6.2 Restrições e Apontamentos"
+            contents:
+              - POST /mandadosprisao
+              - POST /ccf
+              - POST /crednetlight
+
+      - section: "7. KYC, Compliance e Background Check"
+        contents:
+          - section: "7.1 Produtos KYC"
+            contents:
+              - POST /sancoes
+              - POST /kycrh
+              - POST /kycbet
+          - section: "7.2 Exposição Pública e Compliance"
+            contents:
+              - POST /exposicaopublicapf
+              - POST /exposicaopublicapj
+          - section: "7.3 Background Check"
+            contents:
+              - POST /backgroundcheckpf
+              - POST /backgroundcheckpj
+
+      - section: "8. Antifraude, Validações e Autenticação de Dados"
+        contents:
+          - section: "8.1 Validação Cadastral e Vínculo"
+            contents:
+              - POST /validacadastral
+              - POST /proprietariotelefoneoperadora
+              - POST /validatelefonedocumento
+              - POST /validawhatsapp
+              - POST /autenticaemail
+              - POST /autenticaemailipendereco
+              - POST /emailhistoryrisk
+          - section: "8.2 Cartão, BIN e Dados Financeiros"
+            contents:
+              - POST /autenticatitularcartao
+              - POST /validabin
+          - section: "8.3 Biometria Facial"
+            contents:
+              - POST /biometriafacial1x1
+              - POST /biometriafacial1xn
+              - POST /biometriafacialdatavalid
+          - section: "8.4 Documentoscopia"
+            contents:
+              - POST /documentoscopiadigital
+              - POST /documentoscopiaidentificacao
+
+      - section: "9. Marketing, Prospecção e Leads"
+        contents:
+          - POST /geraleadscep
+          - POST /geraleadsuf
+          - POST /geraleadsdetalhes
+          - POST /geraleadsdetalhes/lote
+
+      - section: "Outros"
+        contents:
+          - POST /fgts

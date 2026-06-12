@@ -1,0 +1,148 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# TEMPLATE de endpoint Credify (Fern) — copie e preencha os <PLACEHOLDERS>.
+# Remova os blocos marcados "(só multi-integração)" se o produto consultar
+# uma única base. Referência canônica: paths/veiculototal.yaml
+# ─────────────────────────────────────────────────────────────────────────────
+post:
+  operationId: <camelCaseDescritivo>          # ex: consultarRenavam
+  tags: [<Tag da seção>]                       # ex: Consulta Veicular
+  summary: <Nome comercial curto>              # ex: RENAVAM
+  description: |
+    A **<Nome do Produto>** <frase do que entrega>. <Para multi-integração:
+    consolidando em uma única chamada N integrações com as principais bases...>.
+
+    <Note>
+    Indicada para processos de **<casos de uso>**.
+    </Note>
+
+    ## Integrações que compõem este produto      # (só multi-integração)
+
+    | Integração | O que entrega |
+    |:-----------|:--------------|
+    | `<NOMEBASE>` | <o que entrega> |
+
+    ### <emoji> <Título> — <NOMEBASE>             # (só multi-integração; 1 por base)
+    <Descrição da base>:
+    - <bullet>
+    - <bullet>
+
+    ## TABELA DE CAMPOS DE REQUISIÇÃO
+
+    | **Campo** | **Descrição** | **Formato** | **Obrigatório** |
+    |-----------|---------------|-------------|-----------------|
+    | **IdConsulta** | Identificador da consulta. | string | Sim |
+    | **<Campo>** | <descrição>. | string | Sim |
+
+    <AccordionGroup>
+
+    <Accordion title="Cabeçalho da Resposta — CONSULTA">
+
+    | **Campo** | **Descrição** | **Formato** |
+    |:----------|:--------------|:------------|
+    | **CONSULTA.CODIGORESPOSTA** | Número do protocolo de retorno gerado pelo servidor da API. | string |
+    | **CONSULTA.DATAHORA** | Data e hora exata em que o processamento foi concluído. | string |
+    | **CONSULTA.LOGON** | Código de identificação da credencial de acesso que realizou a chamada. | string |
+    | **CONSULTA.IDCONSULTA** | Código identificador retornado para conciliação com o enviado na requisição. | string |
+    | **CODIGO** | Array com os códigos de status de cada base consultada (1 = Sucesso, 2 = Não Encontrado, 3 = Erro). | array |
+
+    </Accordion>
+
+    <Accordion title="<emoji> <Título do bloco> — <NOMEBASE>">
+
+    | **Campo** | **Descrição** | **Formato** |
+    |:----------|:--------------|:------------|
+    | **<NOMEBASE>.<CAMPO>** | <descrição>. | string |
+
+    </Accordion>
+
+    </AccordionGroup>
+
+    ## Lógica de Resposta (Vetor de Status)
+
+    <Tip>
+    O array `RESPOSTA.CODIGO` funciona como um **sumário de integridade posicional**: cada posição do array corresponde a uma integração, permitindo identificar rapidamente quais blocos retornaram dados válidos sem percorrer todo o JSON.
+    </Tip>
+
+    | Código | Descrição |
+    |--------|-----------|
+    | `1` | Bloco processado com sucesso e contém dados. |
+    | `2` | Bloco processado, mas não foram encontrados dados para o documento consultado. |
+    | `3` | Bloco processado, mas ocorreu um erro no retorno dos dados. |
+
+    ## Exemplos de Resposta
+
+    <Tabs>
+    <Tab title="✅ <Algo> Encontrado">
+
+    ```json
+    {
+      "CONSULTA": { "CODIGORESPOSTA": "100000001", "DATAHORA": "01/01/2026 10:00:00", "LOGON": "00000", "IDCONSULTA": "467" },
+      "RESPOSTA": {
+        "CODIGO": ["1"],
+        "<NOMEBASE>": { "<CAMPO>": "<valor realista>" }
+      }
+    }
+    ```
+
+    </Tab>
+    <Tab title="❌ Não Encontrado">
+
+    ```json
+    {
+      "CONSULTA": { "CODIGORESPOSTA": "*********", "DATAHORA": "01/01/2026 10:00:00", "LOGON": "*****", "IDCONSULTA": "467" },
+      "RESPOSTA": { "CODIGO": ["2"], "DADOS": { "MSG": "Dado não encontrado na base de dados." } }
+    }
+    ```
+
+    </Tab>
+    </Tabs>
+
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required: [Consulta]
+          properties:
+            Consulta:
+              type: object
+              required: [IdConsulta, <CampoObrigatorio>]
+              properties:
+                IdConsulta:
+                  type: string
+                  description: Identificador da consulta.
+                  example: "467"
+                <CampoObrigatorio>:
+                  type: string
+                  description: <descrição do campo>.
+                  example: "<exemplo>"
+
+  responses:
+    '200':
+      description: |
+        Resposta da consulta:
+        * Código `1`: Sucesso.
+        * Código `2`: Dado não encontrado na base de dados.
+        * Código `3`: Erro na consulta.
+      content:
+        application/json:
+          schema:
+            $ref: '../openapi.yaml#/components/schemas/<SchemaDaResposta>'
+          examples:
+            <Algo> Encontrado:
+              value:
+                CONSULTA: { CODIGORESPOSTA: "100000001", DATAHORA: "01/01/2026 10:00:00", LOGON: "00000", IDCONSULTA: "467" }
+                RESPOSTA:
+                  CODIGO: ["1"]
+                  # ... espelhe o JSON do Tab de sucesso, em YAML
+            <Algo> Nao Encontrado:
+              value:
+                CONSULTA: { CODIGORESPOSTA: "*********", DATAHORA: "01/01/2026 10:00:00", LOGON: "*****", IDCONSULTA: "467" }
+                RESPOSTA:
+                  CODIGO: ["2"]
+                  DADOS: { MSG: "Dado não encontrado na base de dados." }
+    '400':
+      description: Requisição inválida — verifique o body enviado.
+    '401':
+      description: Token inválido ou expirado. Renove o token JWT via `/auth`.
